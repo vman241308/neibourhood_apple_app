@@ -44,7 +44,7 @@ struct Grid: View {
             }
             .border(.white, width: (isFocused ? 8 : 2))
         }
-        .scaleEffect(isFocused ? 1.2 : 1)
+        .scaleEffect(isFocused ? 1.1 : 1)
         .focusable(true) { newState in isFocused = newState; isFullScreenFocused = true; onCheckCurrentPositon()}
         .animation(.easeInOut, value: isFocused)
         .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
@@ -197,15 +197,20 @@ struct MediaList: View {
     @Binding var currentPaginationNum:Int
     @Binding var isCornerScreenFocused:Bool
     let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(), spacing: 10,
+                 alignment: .top),
+        GridItem(.flexible(), spacing: 10,
+                 alignment: .top),
+        GridItem(.flexible(), spacing: 10,
+                 alignment: .top),
+        GridItem(.flexible(), spacing: 10,
+                 alignment: .top),
+        GridItem(.flexible(), spacing: 10,
+                 alignment: .top)
     ]
     
     var body: some View {
-        VStack {
+        ScrollView() {
             LazyVGrid(columns: columns) {
                 ForEach(allMediaItems, id:\._id ) { item in
                     Grid(item: item, allMediaItems:$allMediaItems, isFullScreenFocused : $isFullScreenFocused, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)

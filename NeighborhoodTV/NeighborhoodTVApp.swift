@@ -182,25 +182,20 @@ struct NeighborhoodTVApp: App {
                                                                       access_key: item["access_key"] as! String
                     )
                     allMediaItems.append(mediaListItems)
-                    var media1 :MediaListType
                     
-                    for i in 0...20 {
-                        media1 = MediaListType(itemIndex: allMediaItems.count + 1,
-                                                                  _id: i as! String,
-                                                                  title: i as! String,
-                                                                  description: i as! String,
-                                                                  thumbnailUrl: i as! String,
-                                                                  duration: i as! Int,
-                                                                  play_uri: i as! String,
-                                                                  access_key: i as! String)
-                        
-                        allMediaItems.append(media1)
-                    }
+                }
+                var media1 :MediaListType
+                for i in 0...20 {
+                    media1 = MediaListType(itemIndex: allMediaItems.count + 1,
+                                           _id: "\(i)" ,
+                                                              title: "\(i)",
+                                                              description: "\(i)",
+                                                              thumbnailUrl: "\(i)",
+                                                              duration: i,
+                                                              play_uri: "\(i)",
+                                                              access_key: "\(i)")
                     
-                    
-                    
-                    
-                    
+                    allMediaItems.append(media1)
                     previewVideo()
                 }
                 

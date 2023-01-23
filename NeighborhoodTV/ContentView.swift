@@ -59,20 +59,22 @@ struct ContentView: View {
                         }.frame(width: 300, height: 60, alignment: .leading)
                         Home(currentVideoPlayURL:$currentVideoPlayURL, allMediaItems:$allMediaItems, currentGridTitle:$currentGridTitle, currentVideoTitle:$currentVideoTitle,isFullScreenBtnFocused:$isFullScreenBtnFocused, isFullScreenFocused : $isFullScreenFocused)
                     }
-                    
+
                     if !isFullScreenBtnFocused {
                             VStack(alignment: .leading) {
                                 Text("\(currentGridTitle)")
                                     .padding(5)
                                 MediaList(allMediaItems:$allMediaItems, isFullScreenFocused : $isFullScreenFocused, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+                                
                             }
-                            .position(x: 860, y: CGFloat((180 * currentPaginationNum)))
-                            .frame(width: 1700)
+                            .frame(width: 1700, height: (isFullScreenFocused ? 870 : 50))
                             .onExitCommand(perform: {isFullScreenFocused = false})
+                        
                     }
                 }
                 
 //            }
+           
         }.background(Image("bg_full")
             .resizable()
             .frame(width: 1920, height: 1080, alignment: .center))
