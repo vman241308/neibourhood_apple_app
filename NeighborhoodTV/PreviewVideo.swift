@@ -16,7 +16,7 @@ struct PreviewVideo: View {
     var body: some View {
         VideoPlayer(player: player).onAppear {
             if player == nil {
-                let templateItem = AVPlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+                let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL)!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
             }

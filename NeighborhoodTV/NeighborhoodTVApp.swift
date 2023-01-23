@@ -182,7 +182,7 @@ struct NeighborhoodTVApp: App {
                                                                       access_key: item["access_key"] as! String
                     )
                     allMediaItems.append(mediaListItems)
-                    
+                    previewVideo()
                 }
 //                var media1 :MediaListType
 //                for i in 0...20 {
@@ -194,9 +194,9 @@ struct NeighborhoodTVApp: App {
 //                                                              duration: i,
 //                                                              play_uri: "\(i)",
 //                                                              access_key: "\(i)")
-//
+//                    
 //                    allMediaItems.append(media1)
-//                    previewVideo()
+//                   
 //                }
                 
                 

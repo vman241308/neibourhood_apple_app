@@ -1,22 +1,22 @@
 {
   "images" : [
     {
-      "filename" : "imgpsh_fullsize_anim7.png",
+      "filename" : "iTunesArtwork@1x.png",
       "idiom" : "tv",
       "scale" : "1x"
     },
     {
-      "filename" : "imgpsh_fullsize_anim7-1.png",
+      "filename" : "iTunesArtwork@2x.png",
       "idiom" : "tv",
       "scale" : "2x"
     },
     {
-      "filename" : "imgpsh_fullsize_anim7-2.png",
+      "filename" : "iTunesArtwork@1x-1.png",
       "idiom" : "tv-marketing",
       "scale" : "1x"
     },
     {
-      "filename" : "imgpsh_fullsize_anim7-3.png",
+      "filename" : "iTunesArtwork@2x-1.png",
       "idiom" : "tv-marketing",
       "scale" : "2x"
     }

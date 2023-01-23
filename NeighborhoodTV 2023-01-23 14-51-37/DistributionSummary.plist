@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NeighborhoodTV.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>D2925A514E427703551D76C7823B70D2294B2493</string>
+				<key>dateExpires</key>
+				<string>8/29/23</string>
+				<key>type</key>
+				<string>Cloud Managed Apple Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>3WG8LJT7J4.com.NeighborhoodTV.NeighborhoodTVOS</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>3WG8LJT7J4</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>NeighborhoodTV.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>1c5d62f9-8624-4a84-8536-1f52ece488c0</string>
+				<key>dateExpires</key>
+				<string>8/29/23</string>
+				<key>name</key>
+				<string>tvOS Team Store Provisioning Profile: com.NeighborhoodTV.NeighborhoodTVOS</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>3WG8LJT7J4</string>
+				<key>name</key>
+				<string>FTF Innovation LLC</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>2</string>
+		</dict>
+	</array>
+</dict>
+</plist>
