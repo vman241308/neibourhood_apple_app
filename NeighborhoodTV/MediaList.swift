@@ -135,7 +135,6 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        print("--------->",item)
         let accessToken = String(describing: UserDefaults.standard.object(forKey: "accessToken")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
         
         let apiBaseURL = String(describing: UserDefaults.standard.object(forKey: "api_base_url")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]

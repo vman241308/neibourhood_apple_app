@@ -61,14 +61,14 @@ struct ContentView: View {
                     }
                     
                     if !isFullScreenBtnFocused {
-                        VStack(alignment: .leading) {
-                            Text("\(currentGridTitle)")
-                                .padding(5)
-                            MediaList(allMediaItems:$allMediaItems, isFullScreenFocused : $isFullScreenFocused, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
-                        }
-                        .position(x: 860, y: CGFloat((180 * currentPaginationNum)))
-                        .frame(width: 1700)
-                        .onExitCommand(perform: {isFullScreenFocused = false})
+                            VStack(alignment: .leading) {
+                                Text("\(currentGridTitle)")
+                                    .padding(5)
+                                MediaList(allMediaItems:$allMediaItems, isFullScreenFocused : $isFullScreenFocused, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+                            }
+                            .position(x: 860, y: CGFloat((180 * currentPaginationNum)))
+                            .frame(width: 1700)
+                            .onExitCommand(perform: {isFullScreenFocused = false})
                     }
                 }
                 

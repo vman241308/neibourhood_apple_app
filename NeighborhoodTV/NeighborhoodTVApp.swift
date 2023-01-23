@@ -162,8 +162,6 @@ struct NeighborhoodTVApp: App {
                                                                          locationId: jsonMediaListLocation["locationId"] as! String
                     )
                     allLocationItems.append(locationListItems)
-
-                
                 
                 UserDefaults.standard.set(jsonMediaListLocation["access_key"], forKey: "access_key")
                 UserDefaults.standard.set(jsonMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
@@ -172,7 +170,6 @@ struct NeighborhoodTVApp: App {
                 
                 currentVideoTitle = String(describing: UserDefaults.standard.object(forKey: "currentVideoTitle")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
                 
-                print("---------item>", type(of: jsonMediaListItems))
                 
                 for item in jsonMediaListItems {
                     let mediaListItems: MediaListType = MediaListType(itemIndex: allMediaItems.count + 1,
@@ -185,6 +182,25 @@ struct NeighborhoodTVApp: App {
                                                                       access_key: item["access_key"] as! String
                     )
                     allMediaItems.append(mediaListItems)
+                    var media1 :MediaListType
+                    
+                    for i in 0...20 {
+                        media1 = MediaListType(itemIndex: allMediaItems.count + 1,
+                                                                  _id: i as! String,
+                                                                  title: i as! String,
+                                                                  description: i as! String,
+                                                                  thumbnailUrl: i as! String,
+                                                                  duration: i as! Int,
+                                                                  play_uri: i as! String,
+                                                                  access_key: i as! String)
+                        
+                        allMediaItems.append(media1)
+                    }
+                    
+                    
+                    
+                    
+                    
                     previewVideo()
                 }
                 
