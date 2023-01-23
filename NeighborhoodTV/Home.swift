@@ -39,6 +39,7 @@ struct Home: View {
                                 .border(.white, width: 5)
                                 .scaleEffect(isFullScreenBtnFocused ? 1.1 : 1)
                                 .animation(.easeInOut, value: isFullScreenBtnFocused)
+                                
                         }
                         .opacity((isFullScreenBtnFocused ? 0 : 1))
                         .padding(35)
