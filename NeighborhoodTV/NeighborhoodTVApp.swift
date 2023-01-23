@@ -184,20 +184,20 @@ struct NeighborhoodTVApp: App {
                     allMediaItems.append(mediaListItems)
                     
                 }
-                var media1 :MediaListType
-                for i in 0...20 {
-                    media1 = MediaListType(itemIndex: allMediaItems.count + 1,
-                                           _id: "\(i)" ,
-                                                              title: "\(i)",
-                                                              description: "\(i)",
-                                                              thumbnailUrl: "\(i)",
-                                                              duration: i,
-                                                              play_uri: "\(i)",
-                                                              access_key: "\(i)")
-                    
-                    allMediaItems.append(media1)
-                    previewVideo()
-                }
+//                var media1 :MediaListType
+//                for i in 0...20 {
+//                    media1 = MediaListType(itemIndex: allMediaItems.count + 1,
+//                                           _id: "\(i)" ,
+//                                                              title: "\(i)",
+//                                                              description: "\(i)",
+//                                                              thumbnailUrl: "\(i)",
+//                                                              duration: i,
+//                                                              play_uri: "\(i)",
+//                                                              access_key: "\(i)")
+//
+//                    allMediaItems.append(media1)
+//                    previewVideo()
+//                }
                 
                 
             } catch {

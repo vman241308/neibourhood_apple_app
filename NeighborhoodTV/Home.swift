@@ -39,6 +39,7 @@ struct Home: View {
                                 .border(.white, width: 5)
                                 .scaleEffect(isFullScreenBtnFocused ? 1.1 : 1)
                                 .animation(.easeInOut, value: isFullScreenBtnFocused)
+                                .focusable(true) {newState in isFullScreenBtnFocused = newState}
                                 
                         }
                         .opacity((isFullScreenBtnFocused ? 0 : 1))
@@ -47,7 +48,6 @@ struct Home: View {
                     }
                 }.position(x: (isFullScreenBtnFocused ? 850 : 860), y: (isFullScreenBtnFocused ? 385 :410))
                     .frame(width: 1700, height: 850)
-                    .focusable(false) {newState in isFullScreenBtnFocused = newState}
                     .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnFocused = true})
                     .onExitCommand(perform: {
                         isFullScreenBtnFocused = false
