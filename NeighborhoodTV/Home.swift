@@ -59,7 +59,7 @@ struct Home: View {
                     }
                 }
 //                .position(x: (isFullScreenBtnClicked ? 850 : 860), y: (isFullScreenBtnClicked ? 385 :410))
-                    .frame(width: 1700, height: 850)
+                    .frame(width: 1500, height: 850)
         }
     }
 }

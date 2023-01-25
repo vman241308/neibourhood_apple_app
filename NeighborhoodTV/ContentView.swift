@@ -41,7 +41,7 @@ struct ContentView: View {
                         MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
                         
                     }
-                    .frame(width: 1700, height: (isPreviewVideoStatus ? 900 : 200))
+                    .frame(width: 1500, height: (isPreviewVideoStatus ? 900 : 200))
                 }
             }
             
