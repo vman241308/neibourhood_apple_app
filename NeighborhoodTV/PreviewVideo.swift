@@ -17,6 +17,7 @@ struct PreviewVideo: View {
         VideoPlayer(player: player).onAppear {
             if player == nil {
                 let templateItem = AVPlayerItem(url: URL(string: "file:///Users/fulldev/Documents/video.mp4")!)
+//                let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
                 player!.play()

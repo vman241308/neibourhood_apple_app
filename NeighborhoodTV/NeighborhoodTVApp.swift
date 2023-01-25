@@ -182,7 +182,6 @@ struct NeighborhoodTVApp: App {
                                                                       access_key: item["access_key"] as! String
                     )
                     allMediaItems.append(mediaListItems)
-                    print("-------------", allMediaItems)
                     previewVideo()
                 }
 //                var media1 :MediaListType

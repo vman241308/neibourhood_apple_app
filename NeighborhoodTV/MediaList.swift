@@ -68,7 +68,7 @@ struct Grid: View {
     
     func onCheckCurrentPositon() {
         if (item.itemIndex <= allMediaItems.count && item.itemIndex > (allMediaItems.count - 5)){
-            currentPaginationNum += 1
+            currentPaginationNum = allMediaItems.count
             let optionalRetrieveUri = String(describing: UserDefaults.standard.object(forKey: "retrieve_uri"))
             let retrieveUri = optionalRetrieveUri.components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0].components(separatedBy: "[")[0].appending(String(describing: currentPaginationNum)).appending(optionalRetrieveUri.components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0].components(separatedBy: "]")[1])
             

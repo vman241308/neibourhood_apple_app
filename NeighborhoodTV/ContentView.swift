@@ -19,7 +19,7 @@ struct ContentView: View {
     @State var isFullScreenBtnClicked = false
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
-    @State var currentPaginationNum:Int = 1
+    @State var currentPaginationNum:Int = 0
     @State var isLocationItemFocused:Bool = false
     
     var body: some View {
