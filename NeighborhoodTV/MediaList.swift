@@ -19,7 +19,7 @@ struct Grid: View {
     var item : MediaListType
     @Binding var allMediaItems:[MediaListType]
     @State var isFocused = false
-    @Binding var isFullScreenFocused:Bool
+    @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
     @State var currentVideoPlayURL:String = ""
     @Binding var isCornerScreenFocused:Bool
@@ -45,9 +45,9 @@ struct Grid: View {
             .border(.white, width: (isFocused ? 8 : 2))
         }
         .scaleEffect(isFocused ? 1.1 : 1)
-        .focusable(true) { newState in isFocused = newState; isFullScreenFocused = true; onCheckCurrentPositon()}
+        .focusable(true) { newState in isFocused = newState; onCheckCurrentPositon()}
         .animation(.easeInOut, value: isFocused)
-        .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
+//        .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
     }
     
     @ViewBuilder
@@ -61,6 +61,7 @@ struct Grid: View {
     }
     
     func onCheckCurrentPositon() {
+        isPreviewVideoStatus = true
         if (item.itemIndex <= allMediaItems.count && item.itemIndex > (allMediaItems.count - 5)){
             currentPaginationNum += 1
             let optionalRetrieveUri = String(describing: UserDefaults.standard.object(forKey: "retrieve_uri"))
@@ -193,7 +194,7 @@ struct Grid: View {
 
 struct MediaList: View {
     @Binding var allMediaItems:[MediaListType]
-    @Binding var isFullScreenFocused:Bool
+    @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
     @Binding var isCornerScreenFocused:Bool
     let columns = [
@@ -213,10 +214,9 @@ struct MediaList: View {
         ScrollView() {
             LazyVGrid(columns: columns) {
                 ForEach(allMediaItems, id:\._id ) { item in
-                    Grid(item: item, allMediaItems:$allMediaItems, isFullScreenFocused : $isFullScreenFocused, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+                    Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
                 }
             }
-            .padding(.horizontal)
         }
     }
 }

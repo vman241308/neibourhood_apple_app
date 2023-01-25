@@ -75,6 +75,7 @@ struct NeighborhoodTVApp: App {
                 }
                 
                 UserDefaults.standard.set(jsonTokenResults["accessToken"], forKey: "accessToken")
+                UserDefaults.standard.set(jsonTokenResults["refreshToken"], forKey: "refreshToken")
                 UserDefaults.standard.set(jsonTokenResults["home_uri"], forKey: "home_sub_uri")
                 
                 guard let jsonTokenConfig = jsonTokenResults["config"] as? [String: Any] else {
@@ -94,8 +95,7 @@ struct NeighborhoodTVApp: App {
     /* -----------------------MediaList------------------------ */
     func loadMediaList() {
         accessToken = String(describing: UserDefaults.standard.object(forKey: "accessToken")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
-        
-        
+
         apiBaseURL = String(describing: UserDefaults.standard.object(forKey: "api_base_url")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
         
         homeSubURI = String(describing: UserDefaults.standard.object(forKey: "home_sub_uri")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
@@ -182,6 +182,7 @@ struct NeighborhoodTVApp: App {
                                                                       access_key: item["access_key"] as! String
                     )
                     allMediaItems.append(mediaListItems)
+                    print("-------------", allMediaItems)
                     previewVideo()
                 }
 //                var media1 :MediaListType
@@ -194,9 +195,9 @@ struct NeighborhoodTVApp: App {
 //                                                              duration: i,
 //                                                              play_uri: "\(i)",
 //                                                              access_key: "\(i)")
-//                    
+//
 //                    allMediaItems.append(media1)
-//                   
+//
 //                }
                 
                 

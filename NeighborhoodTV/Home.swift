@@ -7,53 +7,59 @@
 
 import SwiftUI
 import AVKit
+import UIKit
 
 struct Home: View {
+    
     @Binding var currentVideoPlayURL:String
     @Binding var allMediaItems:[MediaListType]
     @Binding var currentGridTitle:String
     @Binding var currentVideoTitle:String
     
     @Binding var isFullScreenBtnFocused:Bool
-    @Binding var isFullScreenFocused:Bool
+    @Binding var isFullScreenBtnClicked:Bool
+    @Binding var isPreviewVideoStatus:Bool
+    
+    @FocusState private var nameInfocus: Bool
+    
+    
     var body: some View {
         VStack{
-            /* ------------------Player & FullScreen btn --------------------- */
-            if !self.isFullScreenFocused {
                 ZStack {
                     PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                         .shadow(color: .black, radius: 10)
+                        .frame(width: (isFullScreenBtnClicked ? 1920 : 1500), height: (isFullScreenBtnClicked ? 1080 : 850))
+                        .onExitCommand(perform: {isFullScreenBtnClicked = false})
                         .focusable(false)
-                        .frame(width: (isFullScreenBtnFocused ? 1920 : 1700), height: (isFullScreenBtnFocused ? 1080 : 850))
                     
                     
-                    HStack {
-                        VStack(alignment: .leading){
-                            Spacer()
-                            Text("Streaming Now - \(currentVideoTitle)")
-                                .font(.custom("Arial Round MT Bold", fixedSize: 35))
-                                .focusable(false)
-                            
-                            Text("Watch in FullScreen")
-                                .padding(20)
-                                .border(.white, width: 5)
-                                .scaleEffect(isFullScreenBtnFocused ? 1.1 : 1)
-                                .animation(.easeInOut, value: isFullScreenBtnFocused)
+                    
+                    if !self.isFullScreenBtnClicked {
+                        HStack {
+                            VStack(alignment: .leading){
+                                Spacer()
+                                Text("Streaming Now - \(currentVideoTitle)")
+                                    .font(.custom("Arial Round MT Bold", fixedSize: 35))
                                 
+                                
+                                Button(action: {isFullScreenBtnClicked = true}){
+                                    Text("Watch in FullScreen").font(.custom("Arial Round MT Bold", fixedSize: 25))
+                                }
+                                .focused($nameInfocus)
+                                .onAppear() {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+                                        self.nameInfocus = true
+                                    }
+                                }
+                            }
+                            .opacity((isFullScreenBtnClicked ? 0 : 1))
+                            .padding(35)
+                            Spacer()
                         }
-                        .opacity((isFullScreenBtnFocused ? 0 : 1))
-                        .padding(35)
-                        Spacer()
                     }
-                }.position(x: (isFullScreenBtnFocused ? 850 : 860), y: (isFullScreenBtnFocused ? 385 :410))
+                }
+//                .position(x: (isFullScreenBtnClicked ? 850 : 860), y: (isFullScreenBtnClicked ? 385 :410))
                     .frame(width: 1700, height: 850)
-                    .focusable(false) {newState in isFullScreenBtnFocused = newState}
-                    .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnFocused = true})
-                    .onExitCommand(perform: {
-                        isFullScreenBtnFocused = false
-                    })
-            }
         }
-        
     }
 }

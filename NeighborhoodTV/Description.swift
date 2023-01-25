@@ -23,7 +23,6 @@ struct Description: View {
             HStack {
                 HStack {
                     VStack(alignment: .leading){
-                        Spacer()
                         Text("Streaming Now - \(currentVideoTitle)")
                             .font(.custom("Arial Round MT Bold", fixedSize: 35))
                             .focusable(false)
@@ -33,18 +32,21 @@ struct Description: View {
                             .border(.white, width: 5)
                             .scaleEffect(isFullScreenBtnFocused ? 1.1 : 1)
                             .animation(.easeInOut, value: isFullScreenBtnFocused)
+                        Spacer()
                     }
                     .opacity((isFullScreenBtnFocused ? 0 : 1))
                     .padding(35)
                     Spacer()
                 }
+                Spacer()
                 
                 PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                     .shadow(color: .black, radius: 10)
                     .focusable(false)
                     .frame(width: (isFullScreenBtnFocused ? 1920 : 1100), height: (isFullScreenBtnFocused ? 1080 : 650))
+                    .position(x: 380, y: 260)
+                    
             }
-            .position(x: (isFullScreenBtnFocused ? 850 : 925), y: (isFullScreenBtnFocused ? 385 :265))
             .frame(width: 1700, height: 650)
             .focusable(false) {newState in isFullScreenBtnFocused = newState}
             .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnFocused = true})
