@@ -27,7 +27,7 @@ struct ContentView: View {
             
             /* ------------------ MainContent --------------------- */
             VStack(alignment: .leading) {
-               
+                
                 
                 if !self.isPreviewVideoStatus {
                     VStack {
@@ -41,6 +41,7 @@ struct ContentView: View {
                         MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
                         
                     }
+                    .onExitCommand(perform: {isPreviewVideoStatus = false})
                     .frame(width: 1500, height: (isPreviewVideoStatus ? 900 : 200))
                 }
             }

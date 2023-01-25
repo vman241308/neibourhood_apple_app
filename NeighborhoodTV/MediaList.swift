@@ -26,7 +26,8 @@ struct Grid: View {
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
