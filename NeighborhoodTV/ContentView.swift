@@ -24,7 +24,6 @@ struct ContentView: View {
     
     var body: some View {
         HStack {
-            
             /* ------------------ MainContent --------------------- */
             VStack(alignment: .leading) {
                 
@@ -39,7 +38,6 @@ struct ContentView: View {
                     VStack(alignment: .leading) {
                         Text("\(currentGridTitle)")
                         MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
-                        
                     }
                     .onExitCommand(perform: {isPreviewVideoStatus = false})
                     .frame(width: 1500, height: (isPreviewVideoStatus ? 900 : 200))

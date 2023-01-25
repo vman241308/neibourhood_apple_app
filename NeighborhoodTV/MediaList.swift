@@ -46,7 +46,12 @@ struct Grid: View {
             .border(.white, width: (isFocused ? 8 : 2))
         }
         .scaleEffect(isFocused ? 1.1 : 1)
-        .focusable(true) { newState in isFocused = newState; onCheckCurrentPositon()}
+        .focusable(true) { newState in
+            isFocused = newState;
+            if newState {
+                isPreviewVideoStatus = true
+            }
+            onCheckCurrentPositon()}
         .animation(.easeInOut, value: isFocused)
 //        .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
     }
@@ -62,7 +67,6 @@ struct Grid: View {
     }
     
     func onCheckCurrentPositon() {
-        isPreviewVideoStatus = true
         if (item.itemIndex <= allMediaItems.count && item.itemIndex > (allMediaItems.count - 5)){
             currentPaginationNum += 1
             let optionalRetrieveUri = String(describing: UserDefaults.standard.object(forKey: "retrieve_uri"))
