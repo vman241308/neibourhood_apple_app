@@ -19,7 +19,7 @@ struct PreviewVideo: View {
                 let templateItem = AVPlayerItem(url: URL(string: "file:///Users/fulldev/Documents/video.mp4")!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-//                player!.play()
+                player!.play()
             }
         }
     }
