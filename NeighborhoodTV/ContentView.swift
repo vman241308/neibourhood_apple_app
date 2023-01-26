@@ -32,6 +32,10 @@ struct ContentView: View {
                     VStack {
                         Home(currentVideoPlayURL:$currentVideoPlayURL, allMediaItems:$allMediaItems, currentGridTitle:$currentGridTitle, currentVideoTitle:$currentVideoTitle,isFullScreenBtnFocused:$isFullScreenBtnFocused, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus : $isPreviewVideoStatus)
                     }
+                } else if !self.isCornerScreenFocused {
+                    VStack {
+                        Description(currentVideoPlayURL:$currentVideoPlayURL, allMediaItems:$allMediaItems, currentGridTitle:$currentGridTitle, currentVideoTitle:$currentVideoTitle,isFullScreenBtnFocused:$isFullScreenBtnFocused, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus : $isPreviewVideoStatus)
+                    }
                 }
                 
                 if !isFullScreenBtnClicked {
@@ -40,7 +44,7 @@ struct ContentView: View {
                         MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum :$currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
                     }
                     .onExitCommand(perform: {isPreviewVideoStatus = false})
-                    .frame(width: 1500, height: (isPreviewVideoStatus ? 900 : 200))
+                    .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  900 : 210 : 200))
                 }
             }
             

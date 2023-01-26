@@ -53,7 +53,7 @@ struct Grid: View {
             }
             onCheckCurrentPositon()}
         .animation(.easeInOut, value: isFocused)
-//        .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
+        .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
     }
     
     @ViewBuilder
@@ -184,6 +184,10 @@ struct Grid: View {
                     print("Error: Cannot convert data to jsonPreviewVideoResults object")
                     return
                 }
+                
+                print("--------title",jsonPreviewVideoObject)
+                
+//                UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "currentVideoTitle")
                 
                 currentVideoPlayURL = String(describing: jsonPreviewVideoResults["uri"]).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
                 PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
