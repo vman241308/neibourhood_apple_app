@@ -17,7 +17,6 @@ struct NeighborhoodTVApp: App {
     @State var playURI:String = ""
     @State var accessKey:String = ""
     @State var currentVideoPlayURL:String = ""
-    @State var currentGridTitle:String = ""
     @State var currentVideoTitle:String = ""
     @State var allLocationItems:[LocationModel] = []
     
@@ -32,7 +31,7 @@ struct NeighborhoodTVApp: App {
                     .frame(width: 300, height: 100,alignment: .center)
             } else {
                 /* -----------------------MainContent------------------------ */
-                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, currentGridTitle: $currentGridTitle, currentVideoTitle:$currentVideoTitle, allLocationItems: $allLocationItems)
+                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, currentVideoTitle:$currentVideoTitle, allLocationItems: $allLocationItems)
             }
         }
     }
@@ -72,6 +71,19 @@ struct NeighborhoodTVApp: App {
                 guard let jsonTokenResults = jsonTokenObject["results"] as? [String: Any] else {
                     print("Error: Cannot convert data to jsonTokenResults object")
                     return
+                }
+                
+                guard let jsonTokenLocations = jsonTokenResults["locations"] as? [[String: Any]] else {
+                    print("Error: Cannot convert data to jsonMediaListItems object")
+                    return
+                }
+                
+                for locationItem in jsonTokenLocations {
+                    let locationItems: LocationModel = LocationModel (_id: locationItem["_id"] as! String,
+                                                                      thumbnailUrl: locationItem["thumbnailUrl"] as! String,
+                                                                      title: locationItem["title"] as! String,
+                                                                      uri: locationItem["uri"] as! String)
+                    allLocationItems.append(locationItems)
                 }
                 
                 UserDefaults.standard.set(jsonTokenResults["accessToken"], forKey: "accessToken")
@@ -144,24 +156,11 @@ struct NeighborhoodTVApp: App {
                     return
                 }
                 
-                UserDefaults.standard.set(jsonMediaListResults["title"], forKey: "currentGridTitle")
-                currentGridTitle = String(describing: UserDefaults.standard.object(forKey: "currentGridTitle")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
-                
                 guard let jsonMediaListLocation = jsonMediaListResults["location"] as? [String: Any] else {
                     print("Error: Cannot convert data to jsonMediaListLocation object")
                     return
                 }
                 
-
-                    let locationListItems: LocationModel = LocationModel(title: jsonMediaListLocation["title"] as! String,
-                                                                         access_key: jsonMediaListLocation["access_key"] as! String, description: "I am strong.",
-//                                                                         description: jsonMediaListLocation["description"] as! String,
-                                                                         thumbnailUrl: jsonMediaListLocation["thumbnailUrl"] as! String,
-                                                                         play_uri: jsonMediaListLocation["play_uri"] as! String,
-                                                                         _id: jsonMediaListLocation["_id"] as! String,
-                                                                         locationId: jsonMediaListLocation["locationId"] as! String
-                    )
-                    allLocationItems.append(locationListItems)
                 
                 UserDefaults.standard.set(jsonMediaListLocation["access_key"], forKey: "access_key")
                 UserDefaults.standard.set(jsonMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
@@ -184,20 +183,6 @@ struct NeighborhoodTVApp: App {
                     allMediaItems.append(mediaListItems)
                     previewVideo()
                 }
-//                var media1 :MediaListType
-//                for i in 0...20 {
-//                    media1 = MediaListType(itemIndex: allMediaItems.count + 1,
-//                                           _id: "\(i)" ,
-//                                                              title: "\(i)",
-//                                                              description: "\(i)",
-//                                                              thumbnailUrl: "\(i)",
-//                                                              duration: i,
-//                                                              play_uri: "\(i)",
-//                                                              access_key: "\(i)")
-//
-//                    allMediaItems.append(media1)
-//
-//                }
                 
                 
             } catch {

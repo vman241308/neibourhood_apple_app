@@ -44,13 +44,10 @@ struct AccessKeyData: Codable {
 /* ------------ */
 
 struct LocationModel:Codable {
-    var title: String
-    var access_key:String
-    var description:String
-    var thumbnailUrl:String
-    var play_uri:String
     var _id:String
-    var locationId:String
+    var thumbnailUrl:String
+    var title: String
+    var uri:String
 }
 
 

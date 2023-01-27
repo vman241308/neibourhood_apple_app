@@ -14,7 +14,7 @@ import FoundationNetworking
 
 struct GridLocationItem: View {
     var locationItem: LocationModel
-    @Binding var isLocationItemFocused:Bool
+    @State var isLocationItemFocused = false
     
     var body: some View {
         HStack {
@@ -35,9 +35,9 @@ struct GridLocationItem: View {
                     .font(.custom("Arial Round MT Bold", fixedSize: 30))
                     .frame(width: 400, height: 30)
             }
-            .border(.white, width:(isLocationItemFocused ? 10 : 0))
+            .border(.white, width:(isLocationItemFocused ? 7 : 3))
         }
-        .scaleEffect(isLocationItemFocused ? 1.2 : 1)
+        .scaleEffect(isLocationItemFocused ? 1.1 : 1)
         .focusable(true) {newState in isLocationItemFocused = newState}
         .animation(.easeInOut, value: isLocationItemFocused)
         .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationItem()})
@@ -60,7 +60,6 @@ struct GridLocationItem: View {
 
 struct Location: View {
     @Binding var allLocationItems:[LocationModel]
-    @Binding var isLocationItemFocused:Bool
     let locationColumns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -71,7 +70,7 @@ struct Location: View {
         VStack {
             LazyVGrid(columns: locationColumns) {
                 ForEach(allLocationItems, id:\._id) { locationItem in
-                    GridLocationItem(locationItem:locationItem, isLocationItemFocused:$isLocationItemFocused)
+                    GridLocationItem(locationItem:locationItem)
                 }
             }
         }

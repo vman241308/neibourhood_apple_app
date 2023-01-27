@@ -26,8 +26,8 @@ struct Grid: View {
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+                //                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -150,6 +150,9 @@ struct Grid: View {
             return
         }
         
+        UserDefaults.standard.set(item.title, forKey: "currentVideoTitle")
+        UserDefaults.standard.set(item.description, forKey: "currentVideoDescription")
+        
         let accessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: item.access_key)
         let jsonAccessKeyData = try? JSONEncoder().encode(accessKeyDataModel)
         
@@ -185,10 +188,6 @@ struct Grid: View {
                     return
                 }
                 
-                print("--------title",jsonPreviewVideoObject)
-                
-//                UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "currentVideoTitle")
-                
                 currentVideoPlayURL = String(describing: jsonPreviewVideoResults["uri"]).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
                 PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                 isCornerScreenFocused = false
@@ -202,6 +201,7 @@ struct Grid: View {
 
 
 struct MediaList: View {
+    @State var selectedItemIndex: Int = 1
     @Binding var allMediaItems:[MediaListType]
     @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
@@ -220,10 +220,12 @@ struct MediaList: View {
     ]
     
     var body: some View {
-        ScrollView() {
-            LazyVGrid(columns: columns) {
-                ForEach(allMediaItems, id:\._id ) { item in
-                    Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+        ScrollView {
+            ScrollViewReader { proxy in
+                LazyVGrid(columns: columns) {
+                    ForEach(allMediaItems, id:\._id ) { item in
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+                    }
                 }
             }
         }

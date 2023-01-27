@@ -13,7 +13,6 @@ struct Home: View {
     
     @Binding var currentVideoPlayURL:String
     @Binding var allMediaItems:[MediaListType]
-    @Binding var currentGridTitle:String
     @Binding var currentVideoTitle:String
     
     @Binding var isFullScreenBtnFocused:Bool
@@ -56,6 +55,7 @@ struct Home: View {
                 }
             }
             .frame(width: 1500, height: 850)
+            
         }
     }
 }
