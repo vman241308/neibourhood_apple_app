@@ -38,7 +38,7 @@ struct Description: View {
                                 }
                                 .focused($nameInfocus)
                                 .onAppear() {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now()) {
                                         self.nameInfocus = true
                                     }
                                 }
@@ -47,6 +47,7 @@ struct Description: View {
                         }.padding(.top, 130)
                         Spacer()
                     }.frame(width: 950, height: 505)
+                        .background(.red)
                 }
                 
                 
@@ -60,6 +61,7 @@ struct Description: View {
                     
                     Spacer()
                 } .frame(width: 550, height: 505)
+                    .background(.blue)
             }
             .frame(width: 1500, height: 505)
             .onExitCommand(perform: {isCornerScreenFocused = true})

@@ -40,7 +40,7 @@ struct Home: View {
                             }
                             .focused($nameInfocus)
                             .onAppear() {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1 ) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() ) {
                                     self.nameInfocus = true
                                 }
                             }
