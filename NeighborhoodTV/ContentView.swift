@@ -18,8 +18,9 @@ struct ContentView: View {
     @State var isCornerScreenFocused = true
 
     @State var isLocationItemFocused:Bool = false
-    @State var currentVideoTitle:String = String(describing: UserDefaults.standard.object(forKey: "currentVideoTitle")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
-    @State var currentVideoDescription:String = String(describing: UserDefaults.standard.object(forKey: "currentVideoDescription")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
+
+    @State var currentVideoTitle:String =  (UserDefaults.standard.object(forKey: "currentVideoTitle") as? String ?? "")
+    @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     
     var body: some View {
         if self.isLocationItemFocused {
