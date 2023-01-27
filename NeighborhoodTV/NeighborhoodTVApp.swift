@@ -273,8 +273,8 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
-                    guard let _currentVideoPlayURL = UserDefaults.standard.object(forKey: "play_uri") as? String else {
-                        print("Invalid play_uri")
+                    guard let _currentVideoPlayURL = jsonPreviewVideoResults["uri"] as? String else {
+                        print("Invalid uri")
                         return
                     }
                     

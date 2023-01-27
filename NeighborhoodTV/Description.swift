@@ -11,7 +11,6 @@ import UIKit
 
 struct Description: View {
     @Binding var currentVideoPlayURL:String
-    
     @Binding var isFullScreenBtnClicked:Bool
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String

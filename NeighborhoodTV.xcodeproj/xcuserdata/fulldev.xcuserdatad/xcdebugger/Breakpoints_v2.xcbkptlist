@@ -20,5 +20,130 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NeighborhoodTV/PreviewVideo.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "PreviewVideo"
+            landmarkType = "14">
+            <Locations>
+               <Location
+                  uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13 - 9e54676e0160f23f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NeighborhoodTV.PreviewVideo.currentVideoPlayURL.getter : Swift.String"
+                  moduleName = "NeighborhoodTV"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/PreviewVideo.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "192">
+               </Location>
+               <Location
+                  uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13 - 326f6cbf9769e0ab"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NeighborhoodTV.PreviewVideo.currentVideoPlayURL.setter : Swift.String"
+                  moduleName = "NeighborhoodTV"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/PreviewVideo.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "190">
+               </Location>
+               <Location
+                  uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13 - 207defdd3d0d865a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NeighborhoodTV.PreviewVideo.currentVideoPlayURL.modify : Swift.String"
+                  moduleName = "NeighborhoodTV"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/PreviewVideo.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13 - cb57347fc79a8ce6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NeighborhoodTV.PreviewVideo.currentVideoPlayURL.modify : Swift.String with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "NeighborhoodTV"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/PreviewVideo.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "58">
+               </Location>
+               <Location
+                  uuid = "646B548E-AA69-47B3-80D4-5D01FE6CAC13 - 93c425b8157ac173"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "NeighborhoodTV.PreviewVideo.$currentVideoPlayURL.getter : SwiftUI.Binding&lt;Swift.String&gt;"
+                  moduleName = "NeighborhoodTV"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/PreviewVideo.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "234">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B79BC5D3-BC06-4C85-9CA0-AAE4874B915F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NeighborhoodTV/PreviewVideo.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B151142D-48AE-46CA-8497-4C4D5FA72B31"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NeighborhoodTV/PreviewVideo.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

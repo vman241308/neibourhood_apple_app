@@ -94,7 +94,7 @@ struct Location: View {
                 ForEach(allLocationItems, id:\._id) { locationItem in
                     GridLocationItem(locationItem:locationItem)
                 }
-            }
+            }.frame(width: 1500)
         }
     }
 }

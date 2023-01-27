@@ -21,15 +21,15 @@ struct Grid: View {
     @State var isFocused = false
     @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
-    @State var currentVideoPlayURL:String = ""
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
+    @Binding var currentVideoPlayURL:String
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                    //                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+//                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -222,7 +222,6 @@ struct Grid: View {
                     }
                     
                     currentVideoPlayURL = _currentVideoPlayURL
-                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -245,6 +244,7 @@ struct MediaList: View {
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
+    @Binding var currentVideoPlayURL:String
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -263,7 +263,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL)
                     }
                 }
             }

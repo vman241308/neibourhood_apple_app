@@ -17,16 +17,18 @@ struct ContentView: View {
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
 
-    @State var isLocationItemFocused:Bool = false
+    @State var isLocationItemFocused:Int = 1
 
     @State var currentVideoTitle:String =  (UserDefaults.standard.object(forKey: "currentVideoTitle") as? String ?? "")
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     
     var body: some View {
-        if self.isLocationItemFocused {
+        
+        switch self.isLocationItemFocused {
+        case 1:
             Location(allLocationItems:$allLocationItems)
                 .background(Image("bg_full_2"))
-        } else {
+        default:
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
@@ -43,7 +45,7 @@ struct ContentView: View {
                     if !isFullScreenBtnClicked  {
                         VStack(alignment: .leading) {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
-                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription)
+                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL)
                         }
                         .onExitCommand(perform: {!self.isCornerScreenFocused ? (isCornerScreenFocused = true) : (isPreviewVideoStatus = false) })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  970 : 500 : 200))
@@ -54,6 +56,7 @@ struct ContentView: View {
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))
+
         }
     }
 }
