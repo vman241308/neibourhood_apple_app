@@ -12,12 +12,9 @@ import UIKit
 struct Home: View {
     
     @Binding var currentVideoPlayURL:String
-    @Binding var allMediaItems:[MediaListType]
     @Binding var currentVideoTitle:String
     
-    @Binding var isFullScreenBtnFocused:Bool
     @Binding var isFullScreenBtnClicked:Bool
-    @Binding var isPreviewVideoStatus:Bool
     
     @FocusState private var nameInfocus: Bool
     

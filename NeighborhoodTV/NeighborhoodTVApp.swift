@@ -17,7 +17,6 @@ struct NeighborhoodTVApp: App {
     @State var playURI:String = ""
     @State var accessKey:String = ""
     @State var currentVideoPlayURL:String = ""
-    @State var currentVideoTitle:String = ""
     @State var allLocationItems:[LocationModel] = []
     
     var body: some Scene {
@@ -31,7 +30,7 @@ struct NeighborhoodTVApp: App {
                     .frame(width: 300, height: 100,alignment: .center)
             } else {
                 /* -----------------------MainContent------------------------ */
-                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, currentVideoTitle:$currentVideoTitle, allLocationItems: $allLocationItems)
+                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, allLocationItems: $allLocationItems)
             }
         }
     }
@@ -166,8 +165,6 @@ struct NeighborhoodTVApp: App {
                 UserDefaults.standard.set(jsonMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
                 UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "currentVideoTitle")
                 UserDefaults.standard.set(jsonMediaListLocation["play_uri"], forKey: "play_uri")
-                
-                currentVideoTitle = String(describing: UserDefaults.standard.object(forKey: "currentVideoTitle")).components(separatedBy: "Optional(")[1].components(separatedBy: ")")[0]
                 
                 
                 for item in jsonMediaListItems {

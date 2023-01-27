@@ -11,11 +11,8 @@ import UIKit
 
 struct Description: View {
     @Binding var currentVideoPlayURL:String
-    @Binding var allMediaItems:[MediaListType]
     
-    @Binding var isFullScreenBtnFocused:Bool
     @Binding var isFullScreenBtnClicked:Bool
-    @Binding var isPreviewVideoStatus:Bool
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String

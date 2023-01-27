@@ -23,6 +23,8 @@ struct Grid: View {
     @Binding var currentPaginationNum:Int
     @State var currentVideoPlayURL:String = ""
     @Binding var isCornerScreenFocused:Bool
+    @Binding var currentVideoTitle:String
+    @Binding var currentVideoDescription:String
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
@@ -150,8 +152,9 @@ struct Grid: View {
             return
         }
         
-        UserDefaults.standard.set(item.title, forKey: "currentVideoTitle")
-        UserDefaults.standard.set(item.description, forKey: "currentVideoDescription")
+        
+        currentVideoTitle = item.title
+        currentVideoDescription = item.description
         
         let accessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: item.access_key)
         let jsonAccessKeyData = try? JSONEncoder().encode(accessKeyDataModel)
@@ -201,11 +204,12 @@ struct Grid: View {
 
 
 struct MediaList: View {
-    @State var selectedItemIndex: Int = 1
+    @State var currentPaginationNum:Int = 0
     @Binding var allMediaItems:[MediaListType]
     @Binding var isPreviewVideoStatus:Bool
-    @Binding var currentPaginationNum:Int
     @Binding var isCornerScreenFocused:Bool
+    @Binding var currentVideoTitle:String
+    @Binding var currentVideoDescription:String
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -224,7 +228,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription)
                     }
                 }
             }
