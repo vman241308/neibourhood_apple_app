@@ -67,7 +67,6 @@ struct ContentView: View {
                                 
                                 currentVideoPlayURL = _originalVideoPlayURL
                                 currentVideoTitle = _currentVideoTitle
-                                print("-----", _originalVideoPlayURL)
                                 isPreviewVideoStatus = false
                             }
                         })

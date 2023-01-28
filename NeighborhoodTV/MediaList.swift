@@ -28,8 +28,8 @@ struct Grid: View {
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+//                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -228,8 +228,8 @@ struct Grid: View {
                         return
                     }
                     
-//                    currentVideoPlayURL = _currentLocationVideoPlayURL
-                    currentVideoPlayURL = "https://pubcmg.teleosmedia.com/linear/cmg/ga_statewide/playlist.m3u8"
+                    currentVideoPlayURL = _currentLocationVideoPlayURL
+//                    currentVideoPlayURL = "https://pubcmg.teleosmedia.com/linear/cmg/ga_statewide/playlist.m3u8"
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
