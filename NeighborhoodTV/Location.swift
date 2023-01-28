@@ -250,6 +250,8 @@ struct GridLocationItem: View {
                         return
                     }
                     
+                    UserDefaults.standard.set(_currentVideoPlayURL, forKey: "original_uri")
+                    
                     locationCurrentVideoPlayURL = _currentVideoPlayURL
                     isLocationVisible = false
                 } catch {
@@ -320,14 +322,21 @@ struct Location: View {
                             Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
                             MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL)
                         }
-                        .onExitCommand(perform: {!self.isLocationCornerScreenFocused ? (isLocationCornerScreenFocused = true) : (isLocationPreviewVideoStatus = false) })
+                        .onExitCommand(perform: {!self.isLocationCornerScreenFocused ? (isLocationCornerScreenFocused = true) : (isLocationPreviewVideoStatus = false)
+                            if !isLocationCornerScreenFocused {
+                                isLocationCornerScreenFocused = true
+                            } else {
+                                isLocationPreviewVideoStatus = false
+                                guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
+                                    print("Invalid URL")
+                                    return
+                                }
+                                locationCurrentVideoPlayURL = _originalVideoPlayURL
+                            }
+                        })
                         .frame(width: 1500, height: (isLocationPreviewVideoStatus ? isLocationCornerScreenFocused ?  970 : 500 : 200))
                     }
-                    
-                    
-                    
                 }
-                
             }
             .background(Image("bg_full")
                 .resizable()

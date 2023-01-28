@@ -47,7 +47,18 @@ struct ContentView: View {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
                             MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL)
                         }
-                        .onExitCommand(perform: {!self.isCornerScreenFocused ? (isCornerScreenFocused = true) : (isPreviewVideoStatus = false) })
+                        .onExitCommand(perform: {
+                            if !self.isCornerScreenFocused {
+                                isCornerScreenFocused = true
+                            } else {
+                                isPreviewVideoStatus = false
+                                guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
+                                    print("Invalid URL")
+                                    return
+                                }
+                                currentVideoPlayURL = _originalVideoPlayURL
+                            }
+                        })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  970 : 500 : 200))
                     }
                 }

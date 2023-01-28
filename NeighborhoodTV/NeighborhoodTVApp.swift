@@ -279,6 +279,7 @@ struct NeighborhoodTVApp: App {
                     }
                     
                     currentVideoPlayURL = _currentVideoPlayURL
+                    UserDefaults.standard.set(_currentVideoPlayURL, forKey: "original_uri")
                     isSplashActive = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)

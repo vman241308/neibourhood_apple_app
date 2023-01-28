@@ -171,7 +171,7 @@ struct Grid: View {
                 return
             }
             
-            guard let previewVideoParseURL = URL(string: apiBaseURL.appending(item.play_uri)) else {
+            guard let descriptionVideoParseURL = URL(string: apiBaseURL.appending(item.play_uri)) else {
                 print("Invalid URL")
                 return
             }
@@ -180,17 +180,19 @@ struct Grid: View {
             currentVideoTitle = item.title
             currentVideoDescription = item.description
             
-            let accessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: item.access_key)
-            let jsonAccessKeyData = try? JSONEncoder().encode(accessKeyDataModel)
+            let itemAccessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: item.access_key)
+            let jsonItemAccessKeyData = try? JSONEncoder().encode(itemAccessKeyDataModel)
             
-            var previewVideoRequest = URLRequest(url: previewVideoParseURL)
-            previewVideoRequest.httpMethod = "POST"
-            previewVideoRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            previewVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
-            previewVideoRequest.httpBody = jsonAccessKeyData
-            previewVideoRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            print(">>>3", item)
             
-            URLSession.shared.dataTask(with: previewVideoRequest) {data, response, error in
+            var descriptionVideoRequest = URLRequest(url: descriptionVideoParseURL)
+            descriptionVideoRequest.httpMethod = "POST"
+            descriptionVideoRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            descriptionVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            descriptionVideoRequest.httpBody = jsonItemAccessKeyData
+            descriptionVideoRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: descriptionVideoRequest) {data, response, error in
                 guard error == nil else {
                     print("Error: error calling POST")
                     print(error!)
@@ -205,23 +207,24 @@ struct Grid: View {
                     return
                 }
                 do {
-                    guard let jsonPreviewVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    guard let jsonDescriptionVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
                         return
                     }
                     
-                    guard let jsonPreviewVideoResults = jsonPreviewVideoObject["results"] as? [String: Any] else {
+                    guard let jsonDescriptionVideoResults = jsonDescriptionVideoObject["results"] as? [String: Any] else {
                         print("Error: Cannot convert data to jsonPreviewVideoResults object")
                         return
                     }
                     
                     
-                    guard let _currentVideoPlayURL = jsonPreviewVideoResults["uri"] as? String else {
+                    guard let _currentDescriptionVideoPlayURL = jsonDescriptionVideoResults["uri"] as? String else {
                         print("Invalid playURI")
                         return
                     }
                     
-                    currentVideoPlayURL = _currentVideoPlayURL
+                    currentVideoPlayURL = _currentDescriptionVideoPlayURL
+                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
