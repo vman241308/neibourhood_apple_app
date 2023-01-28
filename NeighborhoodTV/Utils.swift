@@ -34,12 +34,12 @@ struct MediaListType: Codable {
 
 /* AccessKey Model */
 struct AccessKeyData: Codable {
-    let version_name: String
-    let device_id: String
-    let device_model: String
-    let version_code: String
-    let device_type: String
-    let access_key: String
+    var version_name: String
+    var device_id: String
+    var device_model: String
+    var version_code: String
+    var device_type: String
+    var access_key: String
 }
 /* ------------ */
 

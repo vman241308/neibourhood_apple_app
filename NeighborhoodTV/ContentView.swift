@@ -12,14 +12,13 @@ struct ContentView: View {
     @Binding var currentVideoPlayURL:String
     @Binding var allMediaItems:[MediaListType]
     @Binding var allLocationItems:[LocationModel]
+    @Binding var currentVideoTitle:String
     
     @State var isFullScreenBtnClicked = false
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
 
     @State var isLocationItemFocused:Int = 0
-
-    @State var currentVideoTitle:String =  (UserDefaults.standard.object(forKey: "currentVideoTitle") as? String ?? "")
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     
     var body: some View {
@@ -28,12 +27,15 @@ struct ContentView: View {
         case 1:
             Location(allLocationItems:$allLocationItems)
                 .background(Image("bg_full_2"))
+        case 2:
+            VideoPlayer(player: AVPlayer(url: URL(string: "https://storecmg.teleosmedia.com/vod/cmg/8c7b9b8f-cdd4-487d-a84d-e9bf9d3c1cb4/playlist.m3u8")!))
         default:
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
                     if !self.isPreviewVideoStatus {
                         VStack {
+                            
                             Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked)
                         }
                     } else if !self.isCornerScreenFocused {
@@ -51,12 +53,22 @@ struct ContentView: View {
                             if !self.isCornerScreenFocused {
                                 isCornerScreenFocused = true
                             } else {
-                                isPreviewVideoStatus = false
+                                
                                 guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
                                     print("Invalid URL")
                                     return
                                 }
+                                
+                                guard let _currentVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
+                                    print("Invalid Title")
+                                    return
+                                }
+                                
+                                
                                 currentVideoPlayURL = _originalVideoPlayURL
+                                currentVideoTitle = _currentVideoTitle
+                                print("-----", _originalVideoPlayURL)
+                                isPreviewVideoStatus = false
                             }
                         })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  970 : 500 : 200))

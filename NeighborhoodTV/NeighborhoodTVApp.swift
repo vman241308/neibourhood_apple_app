@@ -18,6 +18,7 @@ struct NeighborhoodTVApp: App {
     @State var accessKey:String = ""
     @State var currentVideoPlayURL:String = ""
     @State var allLocationItems:[LocationModel] = []
+    @State var currentVideoTitle:String = ""
     
     var body: some Scene {
         WindowGroup {
@@ -30,7 +31,7 @@ struct NeighborhoodTVApp: App {
                     .frame(width: 300, height: 100,alignment: .center)
             } else {
                 /* -----------------------MainContent------------------------ */
-                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, allLocationItems: $allLocationItems)
+                ContentView(currentVideoPlayURL: $currentVideoPlayURL, allMediaItems:$allMediaItems, allLocationItems: $allLocationItems, currentVideoTitle: $currentVideoTitle)
             }
         }
     }
@@ -182,10 +183,17 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
+                    guard let _currentVideoTitle = jsonMediaListLocation["title"] as? String else {
+                        print("Invalid Title")
+                        return
+                    }
+                    
+                    currentVideoTitle = _currentVideoTitle
+                    
                     
                     UserDefaults.standard.set(jsonMediaListLocation["access_key"], forKey: "access_key")
                     UserDefaults.standard.set(jsonMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
-                    UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "currentVideoTitle")
+                    UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "original_title")
                     UserDefaults.standard.set(jsonMediaListLocation["play_uri"], forKey: "play_uri")
                     
                     
@@ -278,8 +286,9 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
-                    currentVideoPlayURL = _currentVideoPlayURL
-                    UserDefaults.standard.set(_currentVideoPlayURL, forKey: "original_uri")
+//                    currentVideoPlayURL = _currentVideoPlayURL
+                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    UserDefaults.standard.set(currentVideoPlayURL, forKey: "original_uri")
                     isSplashActive = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)

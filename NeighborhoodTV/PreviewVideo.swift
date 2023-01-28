@@ -10,14 +10,19 @@ import AVKit
 
 struct PreviewVideo: View {
     @Binding var currentVideoPlayURL:String
-    @State private var player: AVQueuePlayer?
-    @State private var videoLooper: AVPlayerLooper?
+    var player : AVPlayer?  {
+        guard let URL = URL(string: currentVideoPlayURL) else {
+            //                        guard let URL = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8") else {
+            return nil
+        }
+        let player = AVPlayer(url: URL)
+        return player
+    }
     
     var body: some View {
-        VideoPlayer(player: player).onAppear {
-                let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL)!)
-                player = AVQueuePlayer(playerItem: templateItem)
-                videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
+        VideoPlayer(player: player).onAppear(){
+            player?.play()
         }
     }
 }
+

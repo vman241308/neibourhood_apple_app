@@ -180,10 +180,15 @@ struct Grid: View {
             currentVideoTitle = item.title
             currentVideoDescription = item.description
             
-            let itemAccessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: item.access_key)
-            let jsonItemAccessKeyData = try? JSONEncoder().encode(itemAccessKeyDataModel)
+            UserDefaults.standard.set(item.access_key, forKey: "access_key")
             
-            print(">>>3", item)
+            guard let _locationAccessKey = UserDefaults.standard.object(forKey: "access_key") as? String else {
+                print("Invalid accessKey")
+                return
+            }
+            
+            let itemAccessKeyDataModel = AccessKeyData(version_name: "1.0", device_id: "1", device_model: "1", version_code: "1.0", device_type: "Fire TV", access_key: _locationAccessKey)
+            let jsonItemAccessKeyData = try? JSONEncoder().encode(itemAccessKeyDataModel)
             
             var descriptionVideoRequest = URLRequest(url: descriptionVideoParseURL)
             descriptionVideoRequest.httpMethod = "POST"
@@ -218,13 +223,13 @@ struct Grid: View {
                     }
                     
                     
-                    guard let _currentDescriptionVideoPlayURL = jsonDescriptionVideoResults["uri"] as? String else {
+                    guard let _currentLocationVideoPlayURL = jsonDescriptionVideoResults["uri"] as? String else {
                         print("Invalid playURI")
                         return
                     }
                     
-                    currentVideoPlayURL = _currentDescriptionVideoPlayURL
-                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
+//                    currentVideoPlayURL = _currentLocationVideoPlayURL
+                    currentVideoPlayURL = "https://pubcmg.teleosmedia.com/linear/cmg/ga_statewide/playlist.m3u8"
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
