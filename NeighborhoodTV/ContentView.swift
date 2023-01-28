@@ -17,7 +17,7 @@ struct ContentView: View {
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
 
-    @State var isLocationItemFocused:Int = 1
+    @State var isLocationItemFocused:Int = 0
 
     @State var currentVideoTitle:String =  (UserDefaults.standard.object(forKey: "currentVideoTitle") as? String ?? "")
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
@@ -56,6 +56,7 @@ struct ContentView: View {
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))
+            .onExitCommand(perform: {isLocationItemFocused = 1})
 
         }
     }
