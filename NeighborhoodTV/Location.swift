@@ -158,7 +158,7 @@ struct GridLocationItem: View {
                     
                     UserDefaults.standard.set(jsonLocationMediaListLocation["access_key"], forKey: "access_key")
                     UserDefaults.standard.set(jsonLocationMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
-                    UserDefaults.standard.set(jsonLocationMediaListLocation["title"], forKey: "currentVideoTitle")
+                    UserDefaults.standard.set(jsonLocationMediaListLocation["title"], forKey: "original_title")
                     UserDefaults.standard.set(jsonLocationMediaListLocation["play_uri"], forKey: "play_uri")
                     
                     
@@ -249,10 +249,10 @@ struct GridLocationItem: View {
                         print("Invalid uri")
                         return
                     }
-                    
-                    UserDefaults.standard.set(_currentVideoPlayURL, forKey: "original_uri")
-                    
-                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+                   
+//                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     isLocationVisible = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -326,12 +326,20 @@ struct Location: View {
                             if !isLocationCornerScreenFocused {
                                 isLocationCornerScreenFocused = true
                             } else {
-                                isLocationPreviewVideoStatus = false
+                                
                                 guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
                                     print("Invalid URL")
                                     return
                                 }
+                                
+                                guard let _originalVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
+                                    print("Invalid Title")
+                                    return
+                                }
+                                locationCurrentVideoTitle = _originalVideoTitle
                                 locationCurrentVideoPlayURL = _originalVideoPlayURL
+                                
+                                isLocationPreviewVideoStatus = false
                             }
                         })
                         .frame(width: 1500, height: (isLocationPreviewVideoStatus ? isLocationCornerScreenFocused ?  970 : 500 : 200))

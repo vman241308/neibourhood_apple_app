@@ -229,7 +229,7 @@ struct Grid: View {
                     }
                     
 //                    currentVideoPlayURL = _currentLocationVideoPlayURL
-                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)

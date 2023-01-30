@@ -13,7 +13,6 @@ struct PreviewVideo: View {
     var player : AVPlayer!  {
         guard let URL = URL(string: currentVideoPlayURL)
         else {
-            //            guard let URL = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8") else {
             return nil
         }
         let player = AVPlayer(url: URL)
