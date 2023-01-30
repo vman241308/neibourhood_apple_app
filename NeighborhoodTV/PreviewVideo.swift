@@ -10,36 +10,29 @@ import AVKit
 
 struct PreviewVideo: View {
     @Binding var currentVideoPlayURL:String
-    var player : AVPlayer!  {
-        guard let URL = URL(string: currentVideoPlayURL)
-        else {
-            return nil
-        }
-        let player = AVPlayer(url: URL)
-        return player
-    }
-    
+    @State private var player : AVQueuePlayer?
+    @State private var videoLooper: AVPlayerLooper?
+    let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)
     var body: some View {
         VideoPlayer(player: player)
+            .onAppear() {
+                let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
+                player = AVQueuePlayer(playerItem: templateItem)
+                videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
+                player!.play()
+            }
+            .onReceive(publisher) { (output) in
+                guard let _objURL = output.object as? String else {
+                    print("Invalid URL")
+                    return
+                }
+                let templateItem = AVPlayerItem(url: URL(string: _objURL )!)
+                player = AVQueuePlayer(playerItem: templateItem)
+                videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
+                player!.play()
+                
+            }
     }
     
-    
-    struct VideoPlayer: UIViewControllerRepresentable {
-        
-        let player: AVPlayer
-        
-        func makeUIViewController(context: Context) -> AVPlayerViewController {
-            let controller = AVPlayerViewController()
-            controller.player = player
-            
-            return controller
-        }
-        
-        func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-            
-            uiViewController.player?.play() // autoplay the video when view appears
-            
-        }
-    }
 }
 

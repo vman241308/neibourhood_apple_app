@@ -15,6 +15,8 @@ struct Index :Codable {
     var itemIndex:Int
 }
 
+
+
 struct Grid: View {
     var item : MediaListType
     @Binding var allMediaItems:[MediaListType]
@@ -25,10 +27,13 @@ struct Grid: View {
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
+    
+   
+    
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                //                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
                 AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
@@ -228,8 +233,18 @@ struct Grid: View {
                         return
                     }
                     
-//                    currentVideoPlayURL = _currentLocationVideoPlayURL
-                    currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+                    //                    currentVideoPlayURL = _currentLocationVideoPlayURL
+                    
+                    if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+                        currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+                    } else {
+                        currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    }
+                   
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
+                    }
+                    
                     isCornerScreenFocused = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -242,6 +257,10 @@ struct Grid: View {
         }
         
     }
+    
+    
+    
+    
 }
 
 
@@ -278,4 +297,5 @@ struct MediaList: View {
         }
     }
 }
+
 

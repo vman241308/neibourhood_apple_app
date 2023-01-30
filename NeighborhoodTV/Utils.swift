@@ -50,4 +50,7 @@ struct LocationModel:Codable {
     var uri:String
 }
 
+extension Notification.Name {
+    static let dataDidFlow = Notification.Name("DataDidFlow")
+}
 

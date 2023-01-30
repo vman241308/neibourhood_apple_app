@@ -15,8 +15,9 @@ struct Description: View {
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
+    @State var isVideoSectionFocused = false
     
-    @FocusState private var nameInfocus: Bool
+    @FocusState private var nameInfocused: Bool
     
     var body: some View {
         VStack{
@@ -25,22 +26,29 @@ struct Description: View {
                     VStack {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("Streaming Now - \(currentVideoTitle)")
-                                    .font(.custom("Arial Round MT Bold", fixedSize: 35))
+                                VStack {
+                                    Text("Streaming Now - \(currentVideoTitle)")
+                                        .font(.custom("Arial Round MT Bold", fixedSize: 35))
+                                    
+                                    Text("\(currentVideoDescription)")
+                                        .font(.custom("Arial Round MT Bold", fixedSize: 25))
+                                }.focusable(true) {newState in isVideoSectionFocused = newState }
+                                    .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnClicked = true})
+                                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
+
                                 
-                                Text("\(currentVideoDescription)")
-                                    .font(.custom("Arial Round MT Bold", fixedSize: 25))
-                                
-                                
-                                Button(action: {isFullScreenBtnClicked = true}){
+                              
                                     Text("Watch in FullScreen").font(.custom("Arial Round MT Bold", fixedSize: 25))
-                                }
-                                .focused($nameInfocus)
-                                .onAppear() {
-                                    DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                        self.nameInfocus = true
-                                    }
-                                }
+                                    .padding(20)
+                                    .padding(.horizontal, 20)
+                                    .background(isVideoSectionFocused ? .white : .gray)
+                                    .border(isVideoSectionFocused ? .white : .gray)
+                                    .foregroundColor(isVideoSectionFocused ? .black : .white)
+                                    .cornerRadius(10)
+                                    .focusable(true) {newState in isVideoSectionFocused = newState }
+                                    .scaleEffect(isVideoSectionFocused ? 1.1 : 1)
+                                    .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnClicked = true})
+                                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
                             }
                             Spacer()
                         }.padding(.top, 130)
@@ -48,20 +56,18 @@ struct Description: View {
                     }.frame(width: 950, height: 505)
                 }
                 
-                
-                
                 VStack {
                     PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                         .shadow(color: .black, radius: 10)
                         .frame(width: (isFullScreenBtnClicked ? 1920 : 900), height: (isFullScreenBtnClicked ? 1080 : 505))
-                        .onExitCommand(perform: {isFullScreenBtnClicked = false})
-                        .focusable(false)
-                    
+                        .focusable(true) {newState in isVideoSectionFocused = newState }
+                        .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnClicked = true})
+                        .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
                     Spacer()
                 } .frame(width: 550, height: 505)
             }
             .frame(width: 1500, height: 505)
-            .onExitCommand(perform: {isCornerScreenFocused = true})
+            .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
             
         }
     }

@@ -17,6 +17,7 @@ struct ContentView: View {
     @State var isFullScreenBtnClicked = false
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
+//    @State var descriptionPreviewVideo: PreviewVideo = PreviewVideo(currentVideoPlayURL: )
 
     @State var isLocationItemFocused:Int = 0
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
@@ -35,12 +36,11 @@ struct ContentView: View {
                 VStack(alignment: .leading) {
                     if !self.isPreviewVideoStatus {
                         VStack {
-                            
                             Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked)
                         }
                     } else if !self.isCornerScreenFocused {
                         VStack {
-                            Description(currentVideoPlayURL:$currentVideoPlayURL,isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription)
+                            Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription)
                         }
                     }
                     
@@ -64,6 +64,10 @@ struct ContentView: View {
                                     return
                                 }
                                 
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+                                }
+                                
                                 
                                 currentVideoPlayURL = _originalVideoPlayURL
                                 currentVideoTitle = _currentVideoTitle
@@ -78,8 +82,6 @@ struct ContentView: View {
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))
-            .onExitCommand(perform: {isLocationItemFocused = 1})
-
         }
     }
 }
