@@ -68,7 +68,6 @@ struct ContentView: View {
                                     NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
                                 }
                                 
-                                
                                 currentVideoPlayURL = _originalVideoPlayURL
                                 currentVideoTitle = _currentVideoTitle
                                 isPreviewVideoStatus = false

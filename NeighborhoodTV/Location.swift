@@ -252,6 +252,9 @@ struct GridLocationItem: View {
                    
 //                    locationCurrentVideoPlayURL = _currentVideoPlayURL
                     locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
+                    }
                     UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     isLocationVisible = false
                 } catch {
@@ -336,6 +339,11 @@ struct Location: View {
                                     print("Invalid Title")
                                     return
                                 }
+                                
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+                                }
+                                
                                 locationCurrentVideoTitle = _originalVideoTitle
                                 locationCurrentVideoPlayURL = _originalVideoPlayURL
                                 
