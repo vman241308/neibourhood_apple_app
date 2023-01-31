@@ -251,7 +251,7 @@ struct GridLocationItem: View {
                     }
                    
                     locationCurrentVideoPlayURL = _currentVideoPlayURL
-//                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
                     }
