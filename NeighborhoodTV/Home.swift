@@ -13,8 +13,8 @@ struct Home: View {
     
     @Binding var currentVideoPlayURL:String
     @Binding var currentVideoTitle:String
-    
     @Binding var isFullScreenBtnClicked:Bool
+    @Binding var isPreviewVideoStatus:Bool
     
     @FocusState private var nameInfocus: Bool
     
@@ -41,7 +41,9 @@ struct Home: View {
                             .focused($nameInfocus)
                             .onAppear() {
                                 DispatchQueue.main.asyncAfter(deadline: .now() ) {
-                                    self.nameInfocus = true
+//                                    if !isPreviewVideoStatus {
+                                        self.nameInfocus = true
+//                                    }
                                 }
                             }
                         }

@@ -250,8 +250,8 @@ struct GridLocationItem: View {
                         return
                     }
                    
-//                    locationCurrentVideoPlayURL = _currentVideoPlayURL
-                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+//                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
                     }
@@ -278,6 +278,7 @@ struct Location: View {
     @State var isLocationCornerScreenFocused:Bool = true
     @State var locationCurrentVideoDescription:String = ""
     @State var isLocationPreviewVideoStatus:Bool = false
+    @State var isLocationVideoSectionFocuse = false
     
     @Binding var allLocationItems:[LocationModel]
     @State var locationAllMediaItems:[MediaListType] = []
@@ -306,19 +307,19 @@ struct Location: View {
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
-                    if !isLocationPreviewVideoStatus {
+//                    if !isLocationPreviewVideoStatus {
                         VStack {
-                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked)
+                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isLocationPreviewVideoStatus)
                                 .onExitCommand(perform: {isLocationVisible = true})
                         }
-                    } else {
+//                    } else {
                         if !isLocationCornerScreenFocused {
                             VStack {
-                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription)
+                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocuse,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
                             }
                         }
                         
-                    }
+//                    }
                     
                     if !isLocationFullScreenBtnClicked {
                         VStack(alignment: .leading) {

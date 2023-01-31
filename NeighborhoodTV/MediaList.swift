@@ -28,13 +28,11 @@ struct Grid: View {
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
     
-   
-    
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                                                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                    //                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -233,14 +231,14 @@ struct Grid: View {
                         return
                     }
                     
-                    //                    currentVideoPlayURL = _currentLocationVideoPlayURL
+                    currentVideoPlayURL = _currentLocationVideoPlayURL
                     
-                    if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-                        currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
-                    } else {
-                        currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-                    }
-                   
+                    //                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+                    //                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+                    //                                        } else {
+                    //                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    //                                        }
+                    
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }

@@ -17,6 +17,8 @@ struct ContentView: View {
     @State var isFullScreenBtnClicked = false
     @State var isPreviewVideoStatus = false
     @State var isCornerScreenFocused = true
+    @State var isTitleFocused = false
+    @State var isVideoSectionFocused = false
 //    @State var descriptionPreviewVideo: PreviewVideo = PreviewVideo(currentVideoPlayURL: )
 
     @State var isLocationItemFocused:Int = 0
@@ -28,25 +30,36 @@ struct ContentView: View {
         case 1:
             Location(allLocationItems:$allLocationItems)
                 .background(Image("bg_full_2"))
-        case 2:
-            VideoPlayer(player: AVPlayer(url: URL(string: "https://storecmg.teleosmedia.com/vod/cmg/8c7b9b8f-cdd4-487d-a84d-e9bf9d3c1cb4/playlist.m3u8")!))
         default:
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
                     if !self.isPreviewVideoStatus {
                         VStack {
-                            Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked)
+                            Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus:$isPreviewVideoStatus)
                         }
-                    } else if !self.isCornerScreenFocused {
+                    } else
+                    if !self.isCornerScreenFocused {
                         VStack {
-                            Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription)
+                            Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription, isVideoSectionFocused:$isVideoSectionFocused, isPreviewVideoStatus:$isPreviewVideoStatus)
                         }
                     }
                     
                     if !isFullScreenBtnClicked  {
                         VStack(alignment: .leading) {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
+                            
+                            if isCornerScreenFocused {
+                                Divider()
+                                    .focusable(isPreviewVideoStatus ? isVideoSectionFocused ? false : true : false) {newState in isTitleFocused = newState; isPreviewVideoStatus =  false }
+                            }
+                            else {
+                                Divider()
+                                    .focusable( !isVideoSectionFocused ? true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
+                                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
+                            }
+                           
+                            
                             MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL)
                         }
                         .onExitCommand(perform: {
@@ -73,7 +86,7 @@ struct ContentView: View {
                                 isPreviewVideoStatus = false
                             }
                         })
-                        .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  970 : 500 : 200))
+                        .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  960 : 500 : 200))
                     }
                 }
                 
