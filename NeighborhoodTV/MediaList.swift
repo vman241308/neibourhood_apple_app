@@ -21,18 +21,21 @@ struct Grid: View {
     var item : MediaListType
     @Binding var allMediaItems:[MediaListType]
     @State var isFocused = false
+    
     @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
     @Binding var isCornerScreenFocused:Bool
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
+    @Binding var isVideoSectionFocused:Bool
+    @State var isItemFocusable = true
     
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-                //                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -51,7 +54,7 @@ struct Grid: View {
             .border(.white, width: (isFocused ? 8 : 2))
         }
         .scaleEffect(isFocused ? 1.1 : 1)
-        .focusable(true) { newState in
+        .focusable(isItemFocusable) { newState in
             isFocused = newState;
             if newState {
                 isPreviewVideoStatus = true
@@ -163,6 +166,7 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
+        
         do {
             guard let accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
                 print("Invalid accessToken")
@@ -231,19 +235,31 @@ struct Grid: View {
                         return
                     }
                     
-                    currentVideoPlayURL = _currentLocationVideoPlayURL
-                    
-                    if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-                        currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
-                    } else {
-                        currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-                    }
+//                    currentVideoPlayURL = _currentLocationVideoPlayURL
+
+                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+                                        } else {
+                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                                        }
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }
                     
+                    
+                    if !isCornerScreenFocused {
+                        isVideoSectionFocused = true
+                        isFocused = false
+                        
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .videoSection, object: isVideoSectionFocused)
+                        }
+                    }
+                    
                     isCornerScreenFocused = false
+                    
+                    
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
                     return
@@ -265,6 +281,7 @@ struct MediaList: View {
     @Binding var currentVideoTitle:String
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
+    @Binding var isVideoSectionFocused:Bool
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -283,7 +300,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused)
                     }
                 }
             }

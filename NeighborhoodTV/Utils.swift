@@ -52,5 +52,6 @@ struct LocationModel:Codable {
 
 extension Notification.Name {
     static let dataDidFlow = Notification.Name("DataDidFlow")
+    static let videoSection = Notification.Name("VideoSection")
 }
 

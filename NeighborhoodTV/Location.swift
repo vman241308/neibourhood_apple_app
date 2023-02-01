@@ -250,7 +250,7 @@ struct GridLocationItem: View {
                         return
                     }
                    
-                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+//                    locationCurrentVideoPlayURL = _currentVideoPlayURL
                     locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
@@ -278,7 +278,7 @@ struct Location: View {
     @State var isLocationCornerScreenFocused:Bool = true
     @State var locationCurrentVideoDescription:String = ""
     @State var isLocationPreviewVideoStatus:Bool = false
-    @State var isLocationVideoSectionFocuse = false
+    @State var isLocationVideoSectionFocused = false
     
     @Binding var allLocationItems:[LocationModel]
     @State var locationAllMediaItems:[MediaListType] = []
@@ -315,7 +315,7 @@ struct Location: View {
 //                    } else {
                         if !isLocationCornerScreenFocused {
                             VStack {
-                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocuse,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
+                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
                             }
                         }
                         
@@ -324,7 +324,7 @@ struct Location: View {
                     if !isLocationFullScreenBtnClicked {
                         VStack(alignment: .leading) {
                             Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
-                            MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL)
+                            MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused)
                         }
                         .onExitCommand(perform: {!self.isLocationCornerScreenFocused ? (isLocationCornerScreenFocused = true) : (isLocationPreviewVideoStatus = false)
                             if !isLocationCornerScreenFocused {
