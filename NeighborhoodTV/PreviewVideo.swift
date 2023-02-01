@@ -19,7 +19,7 @@ struct PreviewVideo: View {
                 let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-                player!.play()
+//                player!.play()
             }
             .onReceive(publisher) { (output) in
                 guard let _objURL = output.object as? String else {
@@ -29,8 +29,7 @@ struct PreviewVideo: View {
                 let templateItem = AVPlayerItem(url: URL(string: _objURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-                player!.play()
-                
+//                player!.play()
             }
     }
     

@@ -45,6 +45,12 @@ struct Description: View {
                                     .focusable(true) {newState in isVideoSectionFocused = newState }
                                     .scaleEffect(isVideoSectionFocused ? 1.1 : 1)
                                     .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnClicked = true})
+                                    .focused($nameInfocused)
+                                    .onAppear() {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() ) {
+                                                self.nameInfocused = true
+                                        }
+                                    }
                             }
                             Spacer()
                         }.padding(.top, 130)
