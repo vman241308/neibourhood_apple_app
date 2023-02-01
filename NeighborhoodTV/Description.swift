@@ -19,7 +19,7 @@ struct Description: View {
     @Binding var isPreviewVideoStatus:Bool
     
     @FocusState private var nameInfocused: Bool
-    
+    let publishered = NotificationCenter.default.publisher(for: NSNotification.Name.videoSection)
     var body: some View {
         VStack{
             HStack {
@@ -51,12 +51,21 @@ struct Description: View {
                                                 self.nameInfocused = true
                                         }
                                     }
+                                    .onReceive(publishered) { (out) in
+                                        guard let _objVideoSection = out.object as? Bool else {
+                                            print("Invalid URL")
+                                            return
+                                        }
+                                        if _objVideoSection {
+                                            self.nameInfocused = true
+                                        }
+                                    }
                             }
                             Spacer()
                         }.padding(.top, 130)
                         Spacer()
                     }.frame(width: 950, height: 505)
-                        .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
+                        .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
                 }
                 
                 VStack {
@@ -66,12 +75,16 @@ struct Description: View {
                         .focusable(false)
                     Spacer()
                 } .frame(width: 550, height: 505)
-                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
+                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
                     
             }
             .frame(width: 1500, height: 505)
-            .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): (isCornerScreenFocused = true)})
+            .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
             
         }
+    }
+    
+    func onExitButton() {
+        isCornerScreenFocused = true
     }
 }
