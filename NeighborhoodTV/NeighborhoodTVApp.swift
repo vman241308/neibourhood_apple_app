@@ -59,10 +59,15 @@ struct NeighborhoodTVApp: App {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    getRefreshToken()
                 }
+                
                 do {
                     guard let jsonTokenObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert data to jsonTokenObject object")
@@ -88,6 +93,7 @@ struct NeighborhoodTVApp: App {
                     }
                     
                     UserDefaults.standard.set(jsonTokenResults["accessToken"], forKey: "accessToken")
+                    
                     UserDefaults.standard.set(jsonTokenResults["refreshToken"], forKey: "refreshToken")
                     UserDefaults.standard.set(jsonTokenResults["home_uri"], forKey: "home_sub_uri")
                     
@@ -97,6 +103,7 @@ struct NeighborhoodTVApp: App {
                     }
                     
                     UserDefaults.standard.set(jsonTokenConfig["api_base_url"], forKey: "api_base_url")
+                    UserDefaults.standard.set(jsonTokenConfig["api_refresh_token"], forKey: "api_refresh_token")
                     loadMediaList()
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -156,10 +163,15 @@ struct NeighborhoodTVApp: App {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    getRefreshToken()
                 }
+                
                 do {
                     guard let jsonMediaListObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert data to jsonMediaListObject object")
@@ -266,10 +278,15 @@ struct NeighborhoodTVApp: App {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    getRefreshToken()
                 }
+                
                 do {
                     guard let jsonPreviewVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
@@ -286,8 +303,8 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
-//                    currentVideoPlayURL = _currentVideoPlayURL
-                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                                        currentVideoPlayURL = _currentVideoPlayURL
+//                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(currentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)

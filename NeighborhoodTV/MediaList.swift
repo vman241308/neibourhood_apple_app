@@ -18,6 +18,7 @@ struct Index :Codable {
 
 
 struct Grid: View {
+    
     var item : MediaListType
     @Binding var allMediaItems:[MediaListType]
     @State var isFocused = false
@@ -29,13 +30,20 @@ struct Grid: View {
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
+    @Binding var isPresentingAlert:Bool
     @State var isItemFocusable = true
+//    @FocusState private var isPreviousFocused: FocusedField?
+    @FocusState private var isPreviousFocused: Bool
     
+    @State private var itemIndex = 2
+    
+    
+    let publish = NotificationCenter.default.publisher(for: NSNotification.Name.previousItemIndex)
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+//                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -60,6 +68,18 @@ struct Grid: View {
                 isPreviewVideoStatus = true
             }
             onCheckCurrentPositon()}
+        .focused($isPreviousFocused)
+        .onReceive(publish) {iIndex in
+            guard let _iIndex = iIndex.object as? Int else {
+                print("Invalid URL")
+                return
+            }
+            if _iIndex == item.itemIndex {
+                self.isPreviousFocused = true
+            } else {
+                self.isPreviousFocused = false
+            }
+        }
         .animation(.easeInOut, value: isFocused)
         .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
     }
@@ -119,9 +139,14 @@ struct Grid: View {
                         print("Error: Did not receive data")
                         return
                     }
-                    guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                    
+                    let _response = response as? HTTPURLResponse
+                    if (200 ..< 299) ~= _response!.statusCode {
+                        print("Success: HTTP request ")
+                    } else {
                         print("Error: HTTP request failed")
-                        return
+                        getRefreshToken()
+                        isPresentingAlert = true
                     }
                     do {
                         guard let jsonOffsetMediaListObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -166,9 +191,8 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        
         do {
-            guard let accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
+            guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
                 print("Invalid accessToken")
                 return
             }
@@ -214,10 +238,18 @@ struct Grid: View {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    if _response?.statusCode == 401 {
+                        getRefreshToken()
+                        isPresentingAlert = true
+                    }
                 }
+                
                 do {
                     guard let jsonDescriptionVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
@@ -229,19 +261,18 @@ struct Grid: View {
                         return
                     }
                     
-                    
                     guard let _currentLocationVideoPlayURL = jsonDescriptionVideoResults["uri"] as? String else {
                         print("Invalid playURI")
                         return
                     }
                     
-//                    currentVideoPlayURL = _currentLocationVideoPlayURL
+                    currentVideoPlayURL = _currentLocationVideoPlayURL
 
-                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
-                                        } else {
-                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-                                        }
+//                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+//                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+//                                        } else {
+//                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+//                                        }
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
@@ -258,8 +289,7 @@ struct Grid: View {
                     }
                     
                     isCornerScreenFocused = false
-                    
-                    
+                    UserDefaults.standard.set(item.itemIndex, forKey: "previousItemIndex")
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
                     return
@@ -282,6 +312,7 @@ struct MediaList: View {
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
+    @Binding var isPresentingAlert:Bool
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -300,7 +331,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                     }
                 }
             }

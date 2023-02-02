@@ -23,6 +23,7 @@ struct ContentView: View {
     
     @State var isLocationItemFocused:Int = 0
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
+    @State private var isPresentingAlert: Bool = false
     
     var body: some View {
         
@@ -45,7 +46,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    if !isFullScreenBtnClicked  {
+                    
                         VStack(alignment: .leading) {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
                             
@@ -57,17 +58,22 @@ struct ContentView: View {
                                 Divider()
                                     .focusable( !isVideoSectionFocused ? true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
                             }
-                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused)
+                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                         }
                         .onExitCommand(perform: {
                             if !self.isCornerScreenFocused {
-                                isCornerScreenFocused = true
+                                isVideoSectionFocused = true
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .videoSection, object: isVideoSectionFocused)
+                                }
                             } else { onUpButtonToHome() }
                         })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  960 : 500 : 200))
-                    }
+                        .opacity( (!isFullScreenBtnClicked ? 1 : 0))
+
                 }
             }
+            .alert("Try again later", isPresented: $isPresentingAlert){}
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))

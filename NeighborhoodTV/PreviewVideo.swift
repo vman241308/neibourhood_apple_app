@@ -13,13 +13,15 @@ struct PreviewVideo: View {
     @State private var player : AVQueuePlayer?
     @State private var videoLooper: AVPlayerLooper?
     let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)
+    var pub = NotificationCenter.default.publisher(for: NSNotification.Name.videoEndedNotification)
+    
     var body: some View {
         VideoPlayer(player: player)
             .onAppear() {
                 let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-//                player!.play()
+                player!.play()
             }
             .onReceive(publisher) { (output) in
                 guard let _objURL = output.object as? String else {
@@ -29,9 +31,10 @@ struct PreviewVideo: View {
                 let templateItem = AVPlayerItem(url: URL(string: _objURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-//                player!.play()
+                player!.play()
             }
     }
     
 }
+
 
