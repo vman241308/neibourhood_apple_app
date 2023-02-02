@@ -286,6 +286,7 @@ struct Location: View {
     @State var locationCurrentVideoDescription:String = ""
     @State var isLocationPreviewVideoStatus:Bool = false
     @State var isLocationVideoSectionFocused = false
+    @State var isPresentingAlert:Bool = false
     
     @Binding var allLocationItems:[LocationModel]
     @State var locationAllMediaItems:[MediaListType] = []
@@ -331,7 +332,7 @@ struct Location: View {
                     if !isLocationFullScreenBtnClicked {
                         VStack(alignment: .leading) {
                             Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
-                            MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused)
+                            MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                         }
                         .onExitCommand(perform: {!self.isLocationCornerScreenFocused ? (isLocationCornerScreenFocused = true) : (isLocationPreviewVideoStatus = false)
                             if !isLocationCornerScreenFocused {

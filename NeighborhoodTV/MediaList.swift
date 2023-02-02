@@ -30,6 +30,7 @@ struct Grid: View {
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
+    @Binding var isPresentingAlert:Bool
     @State var isItemFocusable = true
 //    @FocusState private var isPreviousFocused: FocusedField?
     @FocusState private var isPreviousFocused: Bool
@@ -145,6 +146,7 @@ struct Grid: View {
                     } else {
                         print("Error: HTTP request failed")
                         getRefreshToken()
+                        isPresentingAlert = true
                     }
                     do {
                         guard let jsonOffsetMediaListObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -244,6 +246,7 @@ struct Grid: View {
                     print("Error: HTTP request failed")
                     if _response?.statusCode == 401 {
                         getRefreshToken()
+                        isPresentingAlert = true
                     }
                 }
                 
@@ -309,6 +312,7 @@ struct MediaList: View {
     @Binding var currentVideoDescription:String
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
+    @Binding var isPresentingAlert:Bool
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -327,7 +331,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                     }
                 }
             }

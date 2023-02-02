@@ -31,8 +31,6 @@ struct PreviewVideo: View {
                 let templateItem = AVPlayerItem(url: URL(string: _objURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
-
-                //                player?.addObserver(self, forKeyPath: #keyPath(player.currentItem.status), options: [.old, .new], context: nil)
 //                player!.play()
             }
     }

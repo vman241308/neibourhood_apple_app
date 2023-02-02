@@ -23,6 +23,7 @@ struct ContentView: View {
     
     @State var isLocationItemFocused:Int = 0
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
+    @State private var isPresentingAlert: Bool = false
     
     var body: some View {
         
@@ -57,7 +58,7 @@ struct ContentView: View {
                                 Divider()
                                     .focusable( !isVideoSectionFocused ? true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
                             }
-                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused)
+                            MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                         }
                         .onExitCommand(perform: {
                             if !self.isCornerScreenFocused {
@@ -71,6 +72,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .alert("Try again later", isPresented: $isPresentingAlert){}
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))
