@@ -46,7 +46,7 @@ struct ContentView: View {
                         }
                     }
                     
-                    if !isFullScreenBtnClicked  {
+                    
                         VStack(alignment: .leading) {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
                             
@@ -69,7 +69,8 @@ struct ContentView: View {
                             } else { onUpButtonToHome() }
                         })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  960 : 500 : 200))
-                    }
+                        .opacity( (!isFullScreenBtnClicked ? 1 : 0))
+
                 }
             }
             .alert("Try again later", isPresented: $isPresentingAlert){}

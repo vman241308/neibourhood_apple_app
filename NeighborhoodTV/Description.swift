@@ -75,8 +75,8 @@ struct Description: View {
                         .focusable(false)
                     Spacer()
                 } .frame(width: 550, height: 505)
+                    .padding(.top , (!isFullScreenBtnClicked ? 0 : 550) )
                     .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
-                    
             }
             .frame(width: 1500, height: 505)
             .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
@@ -85,14 +85,17 @@ struct Description: View {
     }
     
     func onExitButton() {
-        isCornerScreenFocused = true
+        
         guard let _previousItemIndex = UserDefaults.standard.object(forKey: "previousItemIndex") as? Int else {
             print("Invalid URL")
             return
         }
+        print("----------------->>>>", _previousItemIndex)
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .previousItemIndex, object: _previousItemIndex)
         }
+        
+        isCornerScreenFocused = true
     }
 }
