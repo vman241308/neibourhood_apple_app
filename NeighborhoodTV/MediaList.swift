@@ -18,6 +18,7 @@ struct Index :Codable {
 
 
 struct Grid: View {
+    
     var item : MediaListType
     @Binding var allMediaItems:[MediaListType]
     @State var isFocused = false
@@ -30,7 +31,13 @@ struct Grid: View {
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
     @State var isItemFocusable = true
+//    @FocusState private var isPreviousFocused: FocusedField?
+    @FocusState private var isPreviousFocused: Bool
     
+    @State private var itemIndex = 2
+    
+    
+    let publish = NotificationCenter.default.publisher(for: NSNotification.Name.previousItemIndex)
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
@@ -60,6 +67,18 @@ struct Grid: View {
                 isPreviewVideoStatus = true
             }
             onCheckCurrentPositon()}
+        .focused($isPreviousFocused)
+        .onReceive(publish) {iIndex in
+            guard let _iIndex = iIndex.object as? Int else {
+                print("Invalid URL")
+                return
+            }
+            if _iIndex == item.itemIndex {
+                self.isPreviousFocused = true
+            } else {
+                self.isPreviousFocused = false
+            }
+        }
         .animation(.easeInOut, value: isFocused)
         .onLongPressGesture(minimumDuration: 0.001, perform: {onVideoDescription()})
     }
@@ -119,9 +138,13 @@ struct Grid: View {
                         print("Error: Did not receive data")
                         return
                     }
-                    guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                    
+                    let _response = response as? HTTPURLResponse
+                    if (200 ..< 299) ~= _response!.statusCode {
+                        print("Success: HTTP request ")
+                    } else {
                         print("Error: HTTP request failed")
-                        return
+                        getRefreshToken()
                     }
                     do {
                         guard let jsonOffsetMediaListObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -166,9 +189,8 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        
         do {
-            guard let accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
+            guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
                 print("Invalid accessToken")
                 return
             }
@@ -214,10 +236,17 @@ struct Grid: View {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    if _response?.statusCode == 401 {
+                        getRefreshToken()
+                    }
                 }
+                
                 do {
                     guard let jsonDescriptionVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
                         print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
@@ -228,7 +257,6 @@ struct Grid: View {
                         print("Error: Cannot convert data to jsonPreviewVideoResults object")
                         return
                     }
-                    
                     
                     guard let _currentLocationVideoPlayURL = jsonDescriptionVideoResults["uri"] as? String else {
                         print("Invalid playURI")
@@ -258,8 +286,7 @@ struct Grid: View {
                     }
                     
                     isCornerScreenFocused = false
-                    
-                    
+                    UserDefaults.standard.set(item.itemIndex, forKey: "previousItemIndex")
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
                     return

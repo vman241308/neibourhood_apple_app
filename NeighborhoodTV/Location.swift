@@ -128,9 +128,12 @@ struct GridLocationItem: View {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    getRefreshToken()
                 }
                 do {
                     guard let jsonLocationMediaListObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -230,9 +233,13 @@ struct GridLocationItem: View {
                     print("Error: Did not receive data")
                     return
                 }
-                guard let response = response as? HTTPURLResponse, (200 ..< 299) ~= response.statusCode else {
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
                     print("Error: HTTP request failed")
-                    return
+                    getRefreshToken()
                 }
                 do {
                     guard let jsonLocationPreviewVideoObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {

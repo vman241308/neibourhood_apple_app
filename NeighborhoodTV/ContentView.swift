@@ -61,7 +61,10 @@ struct ContentView: View {
                         }
                         .onExitCommand(perform: {
                             if !self.isCornerScreenFocused {
-                                isCornerScreenFocused = true
+                                isVideoSectionFocused = true
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .videoSection, object: isVideoSectionFocused)
+                                }
                             } else { onUpButtonToHome() }
                         })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  960 : 500 : 200))

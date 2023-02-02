@@ -86,5 +86,13 @@ struct Description: View {
     
     func onExitButton() {
         isCornerScreenFocused = true
+        guard let _previousItemIndex = UserDefaults.standard.object(forKey: "previousItemIndex") as? Int else {
+            print("Invalid URL")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .previousItemIndex, object: _previousItemIndex)
+        }
     }
 }
