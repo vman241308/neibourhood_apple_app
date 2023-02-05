@@ -21,7 +21,7 @@ struct ContentView: View {
     @State var isVideoSectionFocused = false
     //    @State var descriptionPreviewVideo: PreviewVideo = PreviewVideo(currentVideoPlayURL: )
     
-    @State var isLocationItemFocused:Int = 0
+    @State var isLocationItemFocused:Int = 2
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     @State private var isPresentingAlert: Bool = false
     
@@ -31,6 +31,8 @@ struct ContentView: View {
         case 1:
             Location(allLocationItems:$allLocationItems)
                 .background(Image("bg_full_2"))
+        case 2:
+            Information()
         default:
             HStack {
                 /* ------------------ MainContent --------------------- */

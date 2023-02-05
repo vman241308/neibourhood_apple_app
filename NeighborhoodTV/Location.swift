@@ -12,9 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
-
 extension Color {
     static let titleBack =  Color(red: 61/255, green: 57/255, blue: 58/255)
+    static let infoMenuColor = Color(red: 47/255, green: 43/255, blue: 44/255)
+    static let infoFocusColor = Color(red: 78/255, green: 73/255, blue: 78/255)
 }
 
 struct GridLocationItem: View {

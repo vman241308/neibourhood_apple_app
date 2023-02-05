@@ -93,7 +93,6 @@ struct NeighborhoodTVApp: App {
                     }
                     
                     UserDefaults.standard.set(jsonTokenResults["accessToken"], forKey: "accessToken")
-                    
                     UserDefaults.standard.set(jsonTokenResults["refreshToken"], forKey: "refreshToken")
                     UserDefaults.standard.set(jsonTokenResults["home_uri"], forKey: "home_sub_uri")
                     
@@ -104,6 +103,9 @@ struct NeighborhoodTVApp: App {
                     
                     UserDefaults.standard.set(jsonTokenConfig["api_base_url"], forKey: "api_base_url")
                     UserDefaults.standard.set(jsonTokenConfig["api_refresh_token"], forKey: "api_refresh_token")
+                    UserDefaults.standard.set(jsonTokenConfig["api_about_us"], forKey: "api_about_us")
+                    UserDefaults.standard.set(jsonTokenConfig["api_privacy_policy"], forKey: "api_privacy_policy")
+                    UserDefaults.standard.set(jsonTokenConfig["api_visitor_agreement"], forKey: "api_visitor_agreement")
                     loadMediaList()
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -309,6 +311,200 @@ struct NeighborhoodTVApp: App {
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }
+                    infoAboutUs()
+                } catch {
+                    print("Error: Trying to convert JSON data to string", error)
+                    return
+                }
+            }.resume()
+        } catch {
+            print("Error: Trying to convert JSON data to string", error)
+            return
+        }
+    }
+    
+    /* -----------------------About Us------------------------ */
+    func infoAboutUs() {
+        do {
+            guard let _infoAboutUsURL = UserDefaults.standard.object(forKey: "api_about_us") as? String else {
+                print("Invalid playURI")
+                return
+            }
+            
+            guard let infoAboutUsParseURL = URL(string: _infoAboutUsURL) else {
+                print("Invalid URL...")
+                return
+            }
+            
+            var infoAboutUsRequest = URLRequest(url: infoAboutUsParseURL)
+            infoAboutUsRequest.httpMethod = "POST"
+            infoAboutUsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            infoAboutUsRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            infoAboutUsRequest.httpBody = jsonDefaultData
+            infoAboutUsRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: infoAboutUsRequest) {data, response, error in
+                guard error == nil else {
+                    print("Error: error calling POST")
+                    print(error!)
+                    return
+                }
+                guard let data = data else {
+                    print("Error: Did not receive data")
+                    return
+                }
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
+                    print("Error: HTTP request failed")
+                    getRefreshToken()
+                }
+                
+                do {
+                    guard let jsonInfoAboutUsObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
+                        return
+                    }
+                    
+                    guard let jsonInfoAboutUsResults = jsonInfoAboutUsObject["results"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+                    
+                    UserDefaults.standard.set(jsonInfoAboutUsResults["page_body"], forKey: "about_us_page_body")
+                    UserDefaults.standard.set(jsonInfoAboutUsResults["seo_title"], forKey: "about_us_seo_title")
+                    
+                    infoPrivacyPolicy()
+                } catch {
+                    print("Error: Trying to convert JSON data to string", error)
+                    return
+                }
+            }.resume()
+        } catch {
+            print("Error: Trying to convert JSON data to string", error)
+            return
+        }
+    }
+    
+    /* -----------------------PrivacyPolicy------------------------ */
+    func infoPrivacyPolicy() {
+        do {
+            guard let _infoPrivacyPolicyURL = UserDefaults.standard.object(forKey: "api_privacy_policy") as? String else {
+                print("Invalid playURI")
+                return
+            }
+            
+            guard let infoPrivacyPolicyParseURL = URL(string: _infoPrivacyPolicyURL) else {
+                print("Invalid URL...")
+                return
+            }
+            
+            var infoPrivacyPolicyRequest = URLRequest(url: infoPrivacyPolicyParseURL)
+            infoPrivacyPolicyRequest.httpMethod = "POST"
+            infoPrivacyPolicyRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            infoPrivacyPolicyRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            infoPrivacyPolicyRequest.httpBody = jsonDefaultData
+            infoPrivacyPolicyRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: infoPrivacyPolicyRequest) {data, response, error in
+                guard error == nil else {
+                    print("Error: error calling POST")
+                    print(error!)
+                    return
+                }
+                guard let data = data else {
+                    print("Error: Did not receive data")
+                    return
+                }
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
+                    print("Error: HTTP request failed")
+                    getRefreshToken()
+                }
+                
+                do {
+                    guard let jsonInfoPrivacyPolicyObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
+                        return
+                    }
+                    
+                    guard let jsonInfoPrivacyPolicyResults = jsonInfoPrivacyPolicyObject["results"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+                    
+                    UserDefaults.standard.set(jsonInfoPrivacyPolicyResults["seo_title"], forKey: "privacy_policy_seo_title")
+                    UserDefaults.standard.set(jsonInfoPrivacyPolicyResults["page_body"], forKey: "privacy_policy_page_body")
+                   
+                    infoVisitorAgreement()
+                } catch {
+                    print("Error: Trying to convert JSON data to string", error)
+                    return
+                }
+            }.resume()
+        } catch {
+            print("Error: Trying to convert JSON data to string", error)
+            return
+        }
+    }
+    
+    /* -----------------------VisitorAgreement------------------------ */
+    func infoVisitorAgreement() {
+        do {
+            guard let _infoVisitorAgreementURL = UserDefaults.standard.object(forKey: "api_visitor_agreement") as? String else {
+                print("Invalid playURI")
+                return
+            }
+            
+            guard let infoVisitorAgreementParseURL = URL(string: _infoVisitorAgreementURL) else {
+                print("Invalid URL...")
+                return
+            }
+            
+            var infoVisitorAgreementRequest = URLRequest(url: infoVisitorAgreementParseURL)
+            infoVisitorAgreementRequest.httpMethod = "POST"
+            infoVisitorAgreementRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            infoVisitorAgreementRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            infoVisitorAgreementRequest.httpBody = jsonDefaultData
+            infoVisitorAgreementRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            URLSession.shared.dataTask(with: infoVisitorAgreementRequest) {data, response, error in
+                guard error == nil else {
+                    print("Error: error calling POST")
+                    print(error!)
+                    return
+                }
+                guard let data = data else {
+                    print("Error: Did not receive data")
+                    return
+                }
+                
+                let _response = response as? HTTPURLResponse
+                if (200 ..< 299) ~= _response!.statusCode {
+                    print("Success: HTTP request ")
+                } else {
+                    print("Error: HTTP request failed")
+                    getRefreshToken()
+                }
+                
+                do {
+                    guard let jsonInfoVisitorAgreementObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                        print("Error: Cannot convert jsonPreviewVideoObject to JSON object")
+                        return
+                    }
+                    
+                    guard let jsonInfoVisitorAgreementResults = jsonInfoVisitorAgreementObject["results"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+                    
+                    UserDefaults.standard.set(jsonInfoVisitorAgreementResults["page_body"], forKey: "visitor_agreement_page_body")
+                    UserDefaults.standard.set(jsonInfoVisitorAgreementResults["seo_title"], forKey: "visitor_agreement_seo_title")
                     isSplashActive = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
@@ -320,4 +516,6 @@ struct NeighborhoodTVApp: App {
             return
         }
     }
+    
+    
 }
