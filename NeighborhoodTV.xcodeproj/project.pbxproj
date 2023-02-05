@@ -11,6 +11,7 @@
 		53899F6529846CFB001A4B29 /* Information.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53899F6429846CFA001A4B29 /* Information.swift */; };
 		539B1FB2297B3FE2005C6D6B /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B1FB1297B3FE2005C6D6B /* Home.swift */; };
 		539B1FB4297B44F0005C6D6B /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B1FB3297B44F0005C6D6B /* Description.swift */; };
+		53CBD7F8298C7C45002486FC /* SideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBD7F7298C7C45002486FC /* SideBar.swift */; };
 		53EDC78A297A6BB20023C93A /* NeighborhoodTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EDC789297A6BB20023C93A /* NeighborhoodTVApp.swift */; };
 		53EDC78C297A6BB20023C93A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EDC78B297A6BB20023C93A /* ContentView.swift */; };
 		53EDC78E297A6BBF0023C93A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53EDC78D297A6BBF0023C93A /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 		53899F6429846CFA001A4B29 /* Information.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Information.swift; sourceTree = "<group>"; };
 		539B1FB1297B3FE2005C6D6B /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		539B1FB3297B44F0005C6D6B /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
+		53CBD7F7298C7C45002486FC /* SideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBar.swift; sourceTree = "<group>"; };
 		53EDC786297A6BB20023C93A /* NeighborhoodTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NeighborhoodTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53EDC789297A6BB20023C93A /* NeighborhoodTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeighborhoodTVApp.swift; sourceTree = "<group>"; };
 		53EDC78B297A6BB20023C93A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				539B1FB3297B44F0005C6D6B /* Description.swift */,
 				53EDC78B297A6BB20023C93A /* ContentView.swift */,
 				53899F6429846CFA001A4B29 /* Information.swift */,
+				53CBD7F7298C7C45002486FC /* SideBar.swift */,
 				53EDC78D297A6BBF0023C93A /* Assets.xcassets */,
 				53EDC78F297A6BBF0023C93A /* Preview Content */,
 			);
@@ -287,6 +290,7 @@
 				53EDC7B8297A71F00023C93A /* MediaList.swift in Sources */,
 				533F119F297BD55A00FE8D90 /* Location.swift in Sources */,
 				53EDC78A297A6BB20023C93A /* NeighborhoodTVApp.swift in Sources */,
+				53CBD7F8298C7C45002486FC /* SideBar.swift in Sources */,
 				53EDC7BA297A7C0F0023C93A /* PreviewVideo.swift in Sources */,
 				53EDC7B6297A6F140023C93A /* Utils.swift in Sources */,
 				53899F6529846CFB001A4B29 /* Information.swift in Sources */,

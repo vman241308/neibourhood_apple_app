@@ -303,8 +303,8 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
-                                        currentVideoPlayURL = _currentVideoPlayURL
-//                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+//                                        currentVideoPlayURL = _currentVideoPlayURL
+                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(currentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)

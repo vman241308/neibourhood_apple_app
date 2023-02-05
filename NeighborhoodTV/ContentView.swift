@@ -46,13 +46,13 @@ struct ContentView: View {
                         }
                     }
                     
-                    
+//                    if !isFullScreenBtnClicked  {
                         VStack(alignment: .leading) {
                             Text("\( !self.isCornerScreenFocused ? "Related Videos" : "The Latest")")
                             
                             if isCornerScreenFocused {
                                 Divider()
-                                    .focusable(isPreviewVideoStatus ? isVideoSectionFocused ? false : true : false) {newState in isTitleFocused = newState; onUpButtonToHome() }
+                                    .focusable(isPreviewVideoStatus ? true : false) {newState in isTitleFocused = newState; onUpButtonToHome() }
                             }
                             else {
                                 Divider()
@@ -70,7 +70,7 @@ struct ContentView: View {
                         })
                         .frame(width: 1500, height: (isPreviewVideoStatus ? isCornerScreenFocused ?  960 : 500 : 200))
                         .opacity( (!isFullScreenBtnClicked ? 1 : 0))
-
+//                    }
                 }
             }
             .alert("Try again later", isPresented: $isPresentingAlert){}
