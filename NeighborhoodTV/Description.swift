@@ -90,7 +90,6 @@ struct Description: View {
             print("Invalid URL")
             return
         }
-        print("----------------->>>>", _previousItemIndex)
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .previousItemIndex, object: _previousItemIndex)

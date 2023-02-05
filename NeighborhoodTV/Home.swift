@@ -25,6 +25,7 @@ struct Home: View {
                     .shadow(color: .black, radius: 10)
                     .frame(width: (isFullScreenBtnClicked ? 1920 : 1500), height: (isFullScreenBtnClicked ? 1080 : 850))
                     .onExitCommand(perform: {isFullScreenBtnClicked = false})
+                    .padding(.top , (!isFullScreenBtnClicked ? 0 : 230) )
                     .focusable(false)
                 
                 if !self.isFullScreenBtnClicked {
