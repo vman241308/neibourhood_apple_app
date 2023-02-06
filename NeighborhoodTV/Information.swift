@@ -12,8 +12,14 @@ import SwiftUI
 import FoundationNetworking
 #endif
 
-extension Color {
-    static let menuColor =  Color(red: 61/255, green: 57/255, blue: 58/255)
+extension String {
+    func markDownToAttributed() -> AttributedString {
+        do {
+            return try AttributedString(markdown: self)
+        } catch {
+            return AttributedString("Error parsing markdown:\(error)")
+        }
+    }
 }
 
 struct Information: View {
@@ -24,22 +30,18 @@ struct Information: View {
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
     @State var isCurrentInfoClick: Int = 1
-    let locationColumns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
                 Label {
                     Text("About Us")
+                    Spacer()
                 } icon: {
-                    Image(systemName: "person.3").resizable().frame(width: 40, height: 30)
+                    Image(systemName: "person.3").resizable().frame(width: 40, height: 25)
                 }
-                .frame(width: 350)
-                .padding(10)
+                .frame(width: 400)
+                .padding(20)
                 .background(isInfoAboutUSFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isInfoAboutUSFocus = newState }
@@ -47,11 +49,12 @@ struct Information: View {
                 
                 Label {
                     Text("Privacy Policy")
+                    Spacer()
                 } icon: {
                     Image(systemName: "exclamationmark.shield").resizable().frame(width: 40, height: 40)
                 }
-                .frame(width: 350)
-                .padding(10)
+                .frame(width: 400)
+                .padding(20)
                 .background(isInfoPrivacyPolicyFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isInfoPrivacyPolicyFocus = newState }
@@ -59,11 +62,12 @@ struct Information: View {
                 
                 Label {
                     Text("Visitor Agreement")
+                    Spacer()
                 } icon: {
                     Image(systemName: "printer").resizable().frame(width: 40, height: 40)
                 }
-                .frame(width: 350)
-                .padding(10)
+                .frame(width: 400)
+                .padding(20)
                 .background(isInfoVisitorAgreementFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isInfoVisitorAgreementFocus = newState }
@@ -71,20 +75,19 @@ struct Information: View {
                 
                 Spacer()
             }
-            .frame(width: 450)
+            .frame(width: 490)
             .background(Color.infoMenuColor)
             
             
             VStack(alignment: .center, spacing: 30) {
-                ScrollView {
-                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
-                        Text("\(infoCurrentBody)")
-                        Spacer()
-                }
+                //                ScrollView {
+                Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
+                Text(infoCurrentBody.markDownToAttributed())
+                Spacer()
+                //                }
             }.onAppear() {
                 getCurrentInfo(isCurrentInfoClick: 1)
             }.focusable(true)
-                .background(.red)
                 .frame(height: 900)
             
             Spacer()
@@ -140,6 +143,4 @@ struct Information: View {
         return isCurrentInfoClick
         
     }
-    
-    
 }
