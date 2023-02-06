@@ -13,7 +13,6 @@ struct PreviewVideo: View {
     @State private var player : AVQueuePlayer?
     @State private var videoLooper: AVPlayerLooper?
     let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)
-    var pub = NotificationCenter.default.publisher(for: NSNotification.Name.videoEndedNotification)
     
     var body: some View {
         VideoPlayer(player: player)

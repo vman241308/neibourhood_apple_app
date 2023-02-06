@@ -85,7 +85,8 @@ struct NeighborhoodTVApp: App {
                     }
                     
                     for locationItem in jsonTokenLocations {
-                        let locationItems: LocationModel = LocationModel (_id: locationItem["_id"] as! String,
+                        let locationItems: LocationModel = LocationModel (locationItemIndex: allLocationItems.count + 1,
+                                                                          _id: locationItem["_id"] as! String,
                                                                           thumbnailUrl: locationItem["thumbnailUrl"] as! String,
                                                                           title: locationItem["title"] as! String,
                                                                           uri: locationItem["uri"] as! String)

@@ -16,6 +16,7 @@ extension Color {
     static let titleBack =  Color(red: 61/255, green: 57/255, blue: 58/255)
     static let infoMenuColor = Color(red: 47/255, green: 43/255, blue: 44/255)
     static let infoFocusColor = Color(red: 78/255, green: 73/255, blue: 78/255)
+    static let sideBarBack = Color(red: 42/255, green: 37/255, blue: 38/255, opacity: 0.7)
 }
 
 struct GridLocationItem: View {
@@ -31,6 +32,9 @@ struct GridLocationItem: View {
     @Binding var locationCurrentVideoTitle:String
     @Binding var isLocationVisible:Bool
     @Binding var isLoadingVisible:Bool
+    @FocusState var isLocationDefaultFocus:Bool
+    
+    let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     
     var body: some View {
         HStack {
@@ -61,6 +65,23 @@ struct GridLocationItem: View {
         .scaleEffect(isLocationItemFocused ? 1.1 : 1)
         .focusable(true) {newState in isLocationItemFocused = newState}
         .animation(.easeInOut, value: isLocationItemFocused)
+        .focused($isLocationDefaultFocus)
+        .onAppear() {
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                if locationItem.locationItemIndex == 1 {
+                    self.isLocationDefaultFocus = true
+                }
+            }
+        }
+        .onReceive(pub_default_focus) { (out_location_default) in
+            guard let _out_location_default = out_location_default.object as? Bool else {
+                print("Invalid URL")
+                return
+            }
+            if _out_location_default {
+                self.isLocationDefaultFocus = true
+            }
+        }
         .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationItem()})
     }
     

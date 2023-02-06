@@ -10,43 +10,124 @@ import SwiftUI
 import AVKit
 
 struct SideBar: View {
+    
+    @State var isSideHomeFocus = false
+    @State var isSideLocationFocus = false
+    @State var isSideInfoFocus = false
+    @State var isSideLockFocus = false
+    @State var isDividerFocus = false
+    @State var isSideFocusState = false
+    @Binding var isCollapseSideBar:Bool
+    @Binding var isPreviewVideoStatus:Bool
+    @Binding var isLocationItemFocused:Int
+    @Binding var currentVideoPlayURL:String
+    @Binding var currentVideoTitle:String
+    @FocusState private var isSideDefaultFocus:Bool
     var body: some View {
-        HStack {
-            NavigationView {
-                VStack {
-                    NavigationLink(destination: Text("1 is selected"), label: {Image("logo").resizable().frame(width: 250, height: 50)})
-                    
-                    
-                    NavigationLink(destination: Text("location"), label: {HStack {
-                        Image("location").resizable().frame(width: 50, height: 50)
-                        Text("Choose Stream").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
-                        
-                    }.frame(width: 250, height: 50)})
-                    
-                    NavigationLink(destination: Text("3 is selected"), label: {HStack {
-                        Image("info").resizable().frame(width: 50, height: 50)
-                        Text("Information").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
-                        
-                    }.frame(width: 250, height: 50)})
-                    
-                    NavigationLink(destination: Text("4 is selected"), label: {HStack {
-                        Image("lock").resizable().frame(width: 50, height: 50)
-                        Text("Lock").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
-                        
-                    }.frame(width: 250, height: 50)})
-                    
-                    Spacer()
+        HStack(spacing: 10) {
+            VStack {
+                Label {
+                } icon: {
+                    if isCollapseSideBar {
+                        Image("logo").resizable().frame(width: 250, height: 50)
+                    } else {
+                        Image("icon").resizable().frame(width: 50, height: 50)
+                    }
                 }
+                .padding(20)
+                .background(isSideHomeFocus ? Color.gray : Color.infoMenuColor)
+                .cornerRadius(10)
+                .focusable(true) {newState in isSideHomeFocus = newState ; sideInFocusState()}
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
+                
+                Label {
+                    if isCollapseSideBar {
+                        Text("Choose Stream").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+                    }
+                } icon: {
+                    Image("location").resizable().frame(width: 50, height: 50)
+                }
+                .padding(20)
+                .background(isSideLocationFocus ? Color.gray : Color.infoMenuColor)
+                .cornerRadius(10)
+                .focusable(true) {newState in isSideLocationFocus = newState; sideInFocusState() }
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 1})
+                
+                Label {
+                    if isCollapseSideBar {
+                        Text("Information").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+                    }
+                } icon: {
+                    Image("info").resizable().frame(width: 50, height: 50)
+                }
+                .padding(20)
+                .background(isSideInfoFocus ? Color.gray : Color.infoMenuColor)
+                .cornerRadius(10)
+                .focusable(true) {newState in isSideInfoFocus = newState; sideInFocusState() }
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 2})
+                
+                Label {
+                    if isCollapseSideBar {
+                        Text("Lock").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+                    }
+                } icon: {
+                    Image("lock").resizable().frame(width: 50, height: 50)
+                }
+                .padding(20)
+                .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
+                .cornerRadius(10)
+                .focusable(true) {newState in isSideLockFocus = newState; sideInFocusState() }
+                .focused($isSideDefaultFocus)
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isCollapseSideBar.toggle(); })
+                
+                Spacer()
             }
-            .frame(width: 400)
-            .background(.black)
-            .padding(.leading, 50)
+            .frame(width: (isCollapseSideBar ? 350 : 140 ))
+            .background(Color.sideBarBack)
             
+            Divider().focusable(true) { newState in isDividerFocus = newState; fromDividerToContent()}
             Spacer()
+        }.padding(.leading, -80)
+    }
+    
+    func sideInFocusState() {
+       
+        if (isSideHomeFocus == true || isSideLocationFocus == true || isSideInfoFocus == true || isSideLockFocus == true) {
+            isSideFocusState = true
+        } else {
+            isSideFocusState = false
+        }
+        print("---->>>>", isSideHomeFocus, isSideLocationFocus, isSideInfoFocus, isSideLockFocus, isSideFocusState)
+    }
+    
+    func fromDividerToContent() {
+        if !self.isSideFocusState {
+            self.isSideDefaultFocus = true
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .locationDefaultFocus, object: true)
+            }
         }
     }
     
-    func collapseSideBar() {
+    func onHomeButton() {
+        guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
+            print("Invalid URL")
+            return
+        }
         
+        guard let _currentVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
+            print("Invalid Title")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+        }
+        
+        currentVideoPlayURL = _originalVideoPlayURL
+        currentVideoTitle = _currentVideoTitle
+        isPreviewVideoStatus = false
     }
 }
+
