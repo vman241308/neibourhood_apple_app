@@ -34,6 +34,8 @@ struct GridLocationItem: View {
     @Binding var isLoadingVisible:Bool
     @FocusState var isLocationDefaultFocus:Bool
     
+    let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
+    
     var body: some View {
         HStack {
             ZStack(alignment: .bottom) {
@@ -69,6 +71,15 @@ struct GridLocationItem: View {
                 if locationItem.locationItemIndex == 1 {
                     self.isLocationDefaultFocus = true
                 }
+            }
+        }
+        .onReceive(pub_default_focus) { (out_location_default) in
+            guard let _out_location_default = out_location_default.object as? Bool else {
+                print("Invalid URL")
+                return
+            }
+            if _out_location_default {
+                self.isLocationDefaultFocus = true
             }
         }
         .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationItem()})

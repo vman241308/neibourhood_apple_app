@@ -82,7 +82,7 @@ struct ContentView: View {
                     .frame(width: 1920, height: 1080, alignment: .center))
             }
             
-            SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused)
+            SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle)
         }
         
         

@@ -54,8 +54,8 @@ struct LocationModel:Codable {
 extension Notification.Name {
     static let dataDidFlow = Notification.Name("DataDidFlow")
     static let videoSection = Notification.Name("VideoSection")
-    static let videoEndedNotification = Notification.Name("AVPlayerItemDidPlayToEndTimeNotification")
     static let previousItemIndex = Notification.Name("previousItemIndex")
+    static let locationDefaultFocus = Notification.Name("locationDefaultFocus")
 }
 
 /* RefreshToken Model */
