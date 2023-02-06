@@ -12,9 +12,10 @@ import Foundation
 import FoundationNetworking
 #endif
 
-
 extension Color {
     static let titleBack =  Color(red: 61/255, green: 57/255, blue: 58/255)
+    static let infoMenuColor = Color(red: 47/255, green: 43/255, blue: 44/255)
+    static let infoFocusColor = Color(red: 78/255, green: 73/255, blue: 78/255)
 }
 
 struct GridLocationItem: View {
@@ -29,6 +30,7 @@ struct GridLocationItem: View {
     @Binding var locationAllMediaItems:[MediaListType]
     @Binding var locationCurrentVideoTitle:String
     @Binding var isLocationVisible:Bool
+    @Binding var isLoadingVisible:Bool
     
     var body: some View {
         HStack {
@@ -73,6 +75,7 @@ struct GridLocationItem: View {
     }
     
     func onLocationItem() {
+        isLoadingVisible = true
         locationAllMediaItems = []
         do {
             guard let _locationHomeSubURI = locationItem.uri as? String else {
@@ -256,14 +259,15 @@ struct GridLocationItem: View {
                         print("Invalid uri")
                         return
                     }
-                   
-//                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+                    
+                    //                    locationCurrentVideoPlayURL = _currentVideoPlayURL
                     locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
                     }
-                    UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     isLocationVisible = false
+                    isLoadingVisible = false
                 } catch {
                     print("Error: Trying to convert JSON data to string", error)
                     return
@@ -290,6 +294,8 @@ struct Location: View {
     
     @Binding var allLocationItems:[LocationModel]
     @State var locationAllMediaItems:[MediaListType] = []
+    @State var isLocationTitleFocused = false
+    @State var isLoadingVisible = false
     let locationColumns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -298,74 +304,96 @@ struct Location: View {
     
     var body: some View {
         if self.isLocationVisible {
-            VStack {
-                Text("Choose Location below")
-                    .foregroundColor(.white)
-                    .font(.custom("Arial Round MT Bold", fixedSize: 30))
-                    .frame(width: 360, height: 30)
-                    .padding(.bottom, 10)
+            ZStack {
+                VStack {
+                    Text("Choose Location below")
+                        .foregroundColor(.white)
+                        .font(.custom("Arial Round MT Bold", fixedSize: 30))
+                        .frame(width: 360, height: 30)
+                        .padding(.bottom, 10)
+                    
+                    LazyVGrid(columns: locationColumns) {
+                        ForEach(allLocationItems, id:\._id) { locationItem in
+                            GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible, isLoadingVisible:$isLoadingVisible)
+                        }
+                    }.frame(width: 1500)
+                }
+                .opacity((isLoadingVisible ? 0.1 : 1))
                 
-                LazyVGrid(columns: locationColumns) {
-                    ForEach(allLocationItems, id:\._id) { locationItem in
-                        GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible)
-                    }
-                }.frame(width: 1500)
+                if isLoadingVisible {
+                    Loading()
+                }
+                
             }
         } else {
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
-//                    if !isLocationPreviewVideoStatus {
+                    if !isLocationPreviewVideoStatus {
                         VStack {
                             Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isLocationPreviewVideoStatus)
                                 .onExitCommand(perform: {isLocationVisible = true})
                         }
-//                    } else {
+                    } else {
                         if !isLocationCornerScreenFocused {
                             VStack {
                                 Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
                             }
                         }
-                        
-//                    }
-                    
-                    if !isLocationFullScreenBtnClicked {
-                        VStack(alignment: .leading) {
-                            Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
-                            MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
-                        }
-                        .onExitCommand(perform: {!self.isLocationCornerScreenFocused ? (isLocationCornerScreenFocused = true) : (isLocationPreviewVideoStatus = false)
-                            if !isLocationCornerScreenFocused {
-                                isLocationCornerScreenFocused = true
-                            } else {
-                                
-                                guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
-                                    print("Invalid URL")
-                                    return
-                                }
-                                
-                                guard let _originalVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
-                                    print("Invalid Title")
-                                    return
-                                }
-                                
-                                DispatchQueue.main.async {
-                                    NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
-                                }
-                                
-                                locationCurrentVideoTitle = _originalVideoTitle
-                                locationCurrentVideoPlayURL = _originalVideoPlayURL
-                                
-                                isLocationPreviewVideoStatus = false
-                            }
-                        })
-                        .frame(width: 1500, height: (isLocationPreviewVideoStatus ? isLocationCornerScreenFocused ?  970 : 500 : 200))
                     }
+                    
+                    VStack(alignment: .leading) {
+                        Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
+                        if isLocationCornerScreenFocused {
+                            Divider()
+                                .focusable(isLocationPreviewVideoStatus ? true : false) {newState in isLocationTitleFocused = newState; onLocationUpButtonToHome() }
+                        }
+                        else {
+                            Divider()
+                                .focusable( !isLocationVideoSectionFocused ? true : false ) { newState in isLocationTitleFocused = newState ; isLocationVideoSectionFocused = true  }
+                        }
+                        
+                        MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
+                    }
+                    .onExitCommand(perform: {
+                        if !self.isLocationCornerScreenFocused {
+                            isLocationVideoSectionFocused = true
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: .videoSection, object: isLocationVideoSectionFocused)
+                            }
+                        } else {
+                            onLocationUpButtonToHome()
+                        }
+                    })
+                    .frame(width: 1500, height: (isLocationPreviewVideoStatus ? isLocationCornerScreenFocused ?  960 : 500 : 200))
+                    .opacity((!isLocationFullScreenBtnClicked ? 1 : 0))
                 }
             }
+            .alert("Try again later", isPresented: $isPresentingAlert){}
             .background(Image("bg_full")
                 .resizable()
                 .frame(width: 1920, height: 1080, alignment: .center))
+            
         }
+    }
+    
+    func onLocationUpButtonToHome() {
+        guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
+            print("Invalid URL")
+            return
+        }
+        
+        guard let _originalVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
+            print("Invalid Title")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+        }
+        
+        locationCurrentVideoTitle = _originalVideoTitle
+        locationCurrentVideoPlayURL = _originalVideoPlayURL
+        isLocationPreviewVideoStatus = false
     }
 }

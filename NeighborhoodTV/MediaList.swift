@@ -36,7 +36,6 @@ struct Grid: View {
     
     @State private var itemIndex = 2
     
-    
     let publish = NotificationCenter.default.publisher(for: NSNotification.Name.previousItemIndex)
     var body: some View {
         HStack{
