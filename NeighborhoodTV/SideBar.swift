@@ -15,10 +15,12 @@ struct SideBar: View {
     @State var isSideLocationFocus = false
     @State var isSideInfoFocus = false
     @State var isSideLockFocus = false
-    @Binding var isCollapseSideBar:Bool
     @State var isDividerFocus = false
-    
+    @State var isSideFocusState = false
+    @Binding var isCollapseSideBar:Bool
+    @Binding var isPreviewVideoStatus:Bool
     @Binding var isLocationItemFocused:Int
+    @FocusState private var isSideDefaultFocus:Bool
     var body: some View {
         HStack(spacing: 10) {
             VStack {
@@ -34,7 +36,7 @@ struct SideBar: View {
                 .background(isSideHomeFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isSideHomeFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0})
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; isPreviewVideoStatus = false; sideInFocusState()})
                 
                 Label {
                     if isCollapseSideBar {
@@ -47,7 +49,7 @@ struct SideBar: View {
                 .background(isSideLocationFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isSideLocationFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 1 })
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 1; sideInFocusState()})
                 
                 Label {
                     if isCollapseSideBar {
@@ -60,7 +62,7 @@ struct SideBar: View {
                 .background(isSideInfoFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isSideInfoFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 2 })
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 2 ; sideInFocusState()})
                 
                 Label {
                     if isCollapseSideBar {
@@ -73,17 +75,30 @@ struct SideBar: View {
                 .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isSideLockFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isCollapseSideBar.toggle()})
+                .focused($isSideDefaultFocus)
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isCollapseSideBar.toggle(); sideInFocusState()})
                 
                 Spacer()
             }
             .frame(width: (isCollapseSideBar ? 350 : 140 ))
             .background(Color.sideBarBack)
             
+            Divider().focusable(isSideFocusState ? false : true) { newState in isDividerFocus = newState ; self.isSideDefaultFocus = true}
+            
           
 //            Divider().focusable(true) { newState in isDividerFocus = newState; isSideLockFocus = true}
             Spacer()
         }.padding(.leading, -80)
+    }
+    
+    func sideInFocusState() {
+        if isSideHomeFocus == true || isSideLocationFocus == true || isSideInfoFocus == true || isSideLockFocus == true {
+            isSideFocusState = true
+        }
+        
+        print("----->>>>isSideHomeFocus", isSideHomeFocus)
+        print("----->>>>isSideLocationFocus", isSideLocationFocus)
+        print("----->>>>isSideInfoFocus", isSideInfoFocus)
     }
 }
 
