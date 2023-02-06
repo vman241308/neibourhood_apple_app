@@ -32,6 +32,7 @@ struct GridLocationItem: View {
     @Binding var locationCurrentVideoTitle:String
     @Binding var isLocationVisible:Bool
     @Binding var isLoadingVisible:Bool
+    @Binding var sideBarDividerFlag:Bool
     @FocusState var isLocationDefaultFocus:Bool
     
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -67,6 +68,7 @@ struct GridLocationItem: View {
         .animation(.easeInOut, value: isLocationItemFocused)
         .focused($isLocationDefaultFocus)
         .onAppear() {
+            sideBarDividerFlag = false
             DispatchQueue.main.asyncAfter(deadline: .now()) {
                 if locationItem.locationItemIndex == 1 {
                     self.isLocationDefaultFocus = true
@@ -79,7 +81,9 @@ struct GridLocationItem: View {
                 return
             }
             if _out_location_default {
-                self.isLocationDefaultFocus = true
+                if locationItem.locationItemIndex == 1 {
+                    self.isLocationDefaultFocus = true
+                }
             }
         }
         .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationItem()})
@@ -314,6 +318,7 @@ struct Location: View {
     @State var isPresentingAlert:Bool = false
     
     @Binding var allLocationItems:[LocationModel]
+    @Binding var sideBarDividerFlag:Bool
     @State var locationAllMediaItems:[MediaListType] = []
     @State var isLocationTitleFocused = false
     @State var isLoadingVisible = false
@@ -335,7 +340,7 @@ struct Location: View {
                     
                     LazyVGrid(columns: locationColumns) {
                         ForEach(allLocationItems, id:\._id) { locationItem in
-                            GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible, isLoadingVisible:$isLoadingVisible)
+                            GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible, isLoadingVisible:$isLoadingVisible, sideBarDividerFlag:$sideBarDividerFlag)
                         }
                     }.frame(width: 1500)
                 }

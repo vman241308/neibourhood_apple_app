@@ -15,13 +15,15 @@ struct SideBar: View {
     @State var isSideLocationFocus = false
     @State var isSideInfoFocus = false
     @State var isSideLockFocus = false
-    @State var isDividerFocus = false
+    @State var isDividerFocus1 = false
+    @State var isDividerFocus2 = false
     @State var isSideFocusState = false
     @Binding var isCollapseSideBar:Bool
     @Binding var isPreviewVideoStatus:Bool
     @Binding var isLocationItemFocused:Int
     @Binding var currentVideoPlayURL:String
     @Binding var currentVideoTitle:String
+    @Binding var sideBarDividerFlag:Bool
     @FocusState private var isSideDefaultFocus:Bool
     var body: some View {
         HStack(spacing: 10) {
@@ -37,7 +39,7 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideHomeFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideHomeFocus = newState ; sideInFocusState()}
+                .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}}
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
                 
                 Label {
@@ -50,7 +52,7 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideLocationFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideLocationFocus = newState; sideInFocusState() }
+                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false} }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 1})
                 
                 Label {
@@ -63,7 +65,7 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideInfoFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideInfoFocus = newState; sideInFocusState() }
+                .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}}
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 2})
                 
                 Label {
@@ -76,7 +78,7 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideLockFocus = newState; sideInFocusState() }
+                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}}
                 .focused($isSideDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCollapseSideBar.toggle(); })
                 
@@ -85,29 +87,29 @@ struct SideBar: View {
             .frame(width: (isCollapseSideBar ? 350 : 140 ))
             .background(Color.sideBarBack)
             
-            Divider().focusable(true) { newState in isDividerFocus = newState; fromDividerToContent()}
+            if sideBarDividerFlag {
+               
+                Divider().focusable(true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
+            } else {
+                
+                Divider().focusable(true) { newState in isDividerFocus2 = newState; fromContentToDivider()}
+            }
+            
+            
             Spacer()
         }.padding(.leading, -80)
     }
     
-    func sideInFocusState() {
-       
-        if (isSideHomeFocus == true || isSideLocationFocus == true || isSideInfoFocus == true || isSideLockFocus == true) {
-            isSideFocusState = true
-        } else {
-            isSideFocusState = false
+    func fromDividerToContent() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .locationDefaultFocus, object: true)
         }
-        print("---->>>>", isSideHomeFocus, isSideLocationFocus, isSideInfoFocus, isSideLockFocus, isSideFocusState)
+        sideBarDividerFlag = false
     }
     
-    func fromDividerToContent() {
-        if !self.isSideFocusState {
-            self.isSideDefaultFocus = true
-        } else {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .locationDefaultFocus, object: true)
-            }
-        }
+    func fromContentToDivider() {
+        self.isSideDefaultFocus = true
+        sideBarDividerFlag = true
     }
     
     func onHomeButton() {
@@ -130,4 +132,3 @@ struct SideBar: View {
         isPreviewVideoStatus = false
     }
 }
-

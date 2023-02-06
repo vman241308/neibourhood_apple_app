@@ -25,17 +25,16 @@ struct ContentView: View {
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     @State private var isPresentingAlert: Bool = false
     @State var isCollapseSideBar:Bool = false
+    @State var sideBarDividerFlag:Bool = false
     
     var body: some View {
         ZStack {
-            
-            
             switch self.isLocationItemFocused {
             case 1:
-                Location(allLocationItems:$allLocationItems)
+                Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag)
                     .background(Image("bg_full_2"))
             case 2:
-                Information()
+                Information(sideBarDividerFlag:$sideBarDividerFlag)
             default:
                 HStack {
                     /* ------------------ MainContent --------------------- */
@@ -82,7 +81,7 @@ struct ContentView: View {
                     .frame(width: 1920, height: 1080, alignment: .center))
             }
             
-            SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle)
+            SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, sideBarDividerFlag:$sideBarDividerFlag)
         }
         
         
