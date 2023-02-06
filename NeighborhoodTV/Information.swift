@@ -30,8 +30,9 @@ struct Information: View {
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
     @State var isCurrentInfoClick: Int = 1
+    @Binding var sideBarDividerFlag:Bool
     @FocusState private var isInfoDefaultFocus:Bool
-    
+    let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
@@ -48,6 +49,16 @@ struct Information: View {
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 1)})
                 .onAppear() {
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
+                        self.isInfoDefaultFocus = true
+                        sideBarDividerFlag = false
+                    }
+                }
+                .onReceive(pub_default_focus) { (out_location_default) in
+                    guard let _out_location_default = out_location_default.object as? Bool else {
+                        print("Invalid URL")
+                        return
+                    }
+                    if _out_location_default {
                         self.isInfoDefaultFocus = true
                     }
                 }

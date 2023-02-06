@@ -41,10 +41,8 @@ struct Home: View {
                             }
                             .focused($nameInfocus)
                             .onAppear() {
-                                DispatchQueue.main.asyncAfter(deadline: .now() ) {
-//                                    if !isPreviewVideoStatus {
+                                DispatchQueue.main.asyncAfter(deadline: .now()) {
                                         self.nameInfocus = true
-//                                    }
                                 }
                             }
                         }
@@ -55,7 +53,6 @@ struct Home: View {
                 }
             }
             .frame(width: 1500, height: 850)
-            
         }
     }
 }
