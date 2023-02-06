@@ -44,6 +44,7 @@ struct AccessKeyData: Codable {
 /* ------------ */
 
 struct LocationModel:Codable {
+    var locationItemIndex: Int
     var _id:String
     var thumbnailUrl:String
     var title: String

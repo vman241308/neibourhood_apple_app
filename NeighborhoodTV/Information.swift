@@ -30,30 +30,33 @@ struct Information: View {
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
     @State var isCurrentInfoClick: Int = 1
+    @FocusState private var isInfoDefaultFocus:Bool
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
                 Label {
-                    Text("About Us")
-                    Spacer()
+                    Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
                 } icon: {
                     Image(systemName: "person.3").resizable().frame(width: 40, height: 25)
                 }
-                .frame(width: 400)
                 .padding(20)
                 .background(isInfoAboutUSFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isInfoAboutUSFocus = newState }
+                .focused($isInfoDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 1)})
+                .onAppear() {
+                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+                        self.isInfoDefaultFocus = true
+                    }
+                }
                 
                 Label {
-                    Text("Privacy Policy")
-                    Spacer()
+                    Text("Privacy Policy").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
                 } icon: {
                     Image(systemName: "exclamationmark.shield").resizable().frame(width: 40, height: 40)
                 }
-                .frame(width: 400)
                 .padding(20)
                 .background(isInfoPrivacyPolicyFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
@@ -61,12 +64,10 @@ struct Information: View {
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 2)})
                 
                 Label {
-                    Text("Visitor Agreement")
-                    Spacer()
+                    Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
                 } icon: {
                     Image(systemName: "printer").resizable().frame(width: 40, height: 40)
                 }
-                .frame(width: 400)
                 .padding(20)
                 .background(isInfoVisitorAgreementFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
@@ -75,7 +76,8 @@ struct Information: View {
                 
                 Spacer()
             }
-            .frame(width: 490)
+            .frame(width: 450)
+            .padding(.leading, 50)
             .background(Color.infoMenuColor)
             
             
