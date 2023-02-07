@@ -313,12 +313,14 @@ struct Location: View {
     @State var locationCurrentVideoTitle:String = ""
     @State var isLocationCornerScreenFocused:Bool = true
     @State var locationCurrentVideoDescription:String = ""
-    @State var isLocationPreviewVideoStatus:Bool = false
+//    @State var isLocationPreviewVideoStatus:Bool = false
     @State var isLocationVideoSectionFocused = false
     @State var isPresentingAlert:Bool = false
     
     @Binding var allLocationItems:[LocationModel]
     @Binding var sideBarDividerFlag:Bool
+    @Binding var isPreviewVideoStatus:Bool
+    
     @State var locationAllMediaItems:[MediaListType] = []
     @State var isLocationTitleFocused = false
     @State var isLoadingVisible = false
@@ -355,15 +357,15 @@ struct Location: View {
             HStack {
                 /* ------------------ MainContent --------------------- */
                 VStack(alignment: .leading) {
-                    if !isLocationPreviewVideoStatus {
+                    if !isPreviewVideoStatus {
                         VStack {
-                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isLocationPreviewVideoStatus)
+                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isPreviewVideoStatus)
                                 .onExitCommand(perform: {isLocationVisible = true})
                         }
                     } else {
                         if !isLocationCornerScreenFocused {
                             VStack {
-                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
+                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isPreviewVideoStatus)
                             }
                         }
                     }
@@ -372,26 +374,26 @@ struct Location: View {
                         Text("\( !isLocationCornerScreenFocused ? "Related Videos" : "The Latest")")
                         if isLocationCornerScreenFocused {
                             Divider()
-                                .focusable(isLocationPreviewVideoStatus ? true : false) {newState in isLocationTitleFocused = newState; onLocationUpButtonToHome() }
+                                .focusable(isPreviewVideoStatus ? true : false) {newState in isLocationTitleFocused = newState; onLocationUpButtonToHome() }
                         }
                         else {
                             Divider()
                                 .focusable( !isLocationVideoSectionFocused ? true : false ) { newState in isLocationTitleFocused = newState ; isLocationVideoSectionFocused = true  }
                         }
                         
-                        MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
+                        MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
                     }
                     .onExitCommand(perform: {
                         if !self.isLocationCornerScreenFocused {
                             isLocationVideoSectionFocused = true
                             DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: .videoSection, object: isLocationVideoSectionFocused)
+                                NotificationCenter.default.post(name: .locationDefaultFocus, object: isLocationVideoSectionFocused)
                             }
                         } else {
                             onLocationUpButtonToHome()
                         }
                     })
-                    .frame(width: 1500, height: (isLocationPreviewVideoStatus ? isLocationCornerScreenFocused ?  960 : 500 : 200))
+                    .frame(width: 1500, height: (isPreviewVideoStatus ? isLocationCornerScreenFocused ?  960 : 500 : 200))
                     .opacity((!isLocationFullScreenBtnClicked ? 1 : 0))
                 }
             }
@@ -420,6 +422,6 @@ struct Location: View {
         
         locationCurrentVideoTitle = _originalVideoTitle
         locationCurrentVideoPlayURL = _originalVideoPlayURL
-        isLocationPreviewVideoStatus = false
+        isPreviewVideoStatus = false
     }
 }

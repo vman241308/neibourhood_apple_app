@@ -282,7 +282,7 @@ struct Grid: View {
                         isFocused = false
                         
                         DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: .videoSection, object: isVideoSectionFocused)
+                            NotificationCenter.default.post(name: .locationDefaultFocus, object: isVideoSectionFocused)
                         }
                     }
                     

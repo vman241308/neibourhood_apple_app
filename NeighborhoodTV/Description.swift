@@ -19,7 +19,7 @@ struct Description: View {
     @Binding var isPreviewVideoStatus:Bool
     
     @FocusState private var nameInfocused: Bool
-    let publishered = NotificationCenter.default.publisher(for: NSNotification.Name.videoSection)
+    let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     var body: some View {
         VStack{
             HStack {
@@ -51,13 +51,13 @@ struct Description: View {
                                                 self.nameInfocused = true
                                         }
                                     }
-                                    .onReceive(publishered) { (out) in
-                                        guard let _objVideoSection = out.object as? Bool else {
+                                    .onReceive(pub_default_focus) { (out_location_default) in
+                                        guard let _out_location_default = out_location_default.object as? Bool else {
                                             print("Invalid URL")
                                             return
                                         }
-                                        if _objVideoSection {
-                                            self.nameInfocused = true
+                                        if _out_location_default {
+                                                self.nameInfocused = true
                                         }
                                     }
                             }
