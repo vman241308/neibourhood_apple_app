@@ -44,7 +44,7 @@ struct Description: View {
                                     .cornerRadius(10)
                                     .focusable(true) {newState in isVideoSectionFocused = newState }
                                     .scaleEffect(isVideoSectionFocused ? 1.1 : 1)
-                                    .onLongPressGesture(minimumDuration: 0.001, perform: {isFullScreenBtnClicked = true})
+                                    .onLongPressGesture(minimumDuration: 0.001, perform: {onFullScreenBtn()})
                                     .focused($nameInfocused)
                                     .onAppear() {
                                         DispatchQueue.main.asyncAfter(deadline: .now() ) {
@@ -65,7 +65,7 @@ struct Description: View {
                         }.padding(.top, 130)
                         Spacer()
                     }.frame(width: 950, height: 505)
-                        .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
+                        .onExitCommand(perform: {isFullScreenBtnClicked ? onVideoBackButton() : onExitButton()})
                 }
                 
                 VStack {
@@ -76,11 +76,18 @@ struct Description: View {
                     Spacer()
                 } .frame(width: 550, height: 505)
                     .padding(.top , (!isFullScreenBtnClicked ? 0 : 550) )
-                    .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
+                    .onExitCommand(perform: {isFullScreenBtnClicked ? onVideoBackButton() : onExitButton()})
             }
             .frame(width: 1500, height: 505)
-            .onExitCommand(perform: {isFullScreenBtnClicked ? (isFullScreenBtnClicked = false ): onExitButton()})
+            .onExitCommand(perform: {isFullScreenBtnClicked ? onVideoBackButton() : onExitButton()})
             
+        }
+    }
+    
+    func onFullScreenBtn() {
+        isFullScreenBtnClicked = true
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .onFullBtnAction, object: true)
         }
     }
     
@@ -96,5 +103,12 @@ struct Description: View {
         }
         
         isCornerScreenFocused = true
+    }
+    
+    func onVideoBackButton() {
+        isFullScreenBtnClicked = false
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .onFullBtnAction, object: isFullScreenBtnClicked)
+        }
     }
 }

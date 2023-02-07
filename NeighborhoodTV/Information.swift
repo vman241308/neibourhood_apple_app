@@ -89,6 +89,7 @@ struct Information: View {
             }
             .frame(width: 450)
             .padding(.leading, 50)
+            .padding(.top, 50)
             .background(Color.infoMenuColor)
             
             

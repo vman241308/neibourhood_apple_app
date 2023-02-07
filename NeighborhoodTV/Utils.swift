@@ -55,6 +55,7 @@ extension Notification.Name {
     static let dataDidFlow = Notification.Name("DataDidFlow")
     static let previousItemIndex = Notification.Name("previousItemIndex")
     static let locationDefaultFocus = Notification.Name("locationDefaultFocus")
+    static let onFullBtnAction = Notification.Name("onFullBtnAction")
 }
 
 /* RefreshToken Model */
