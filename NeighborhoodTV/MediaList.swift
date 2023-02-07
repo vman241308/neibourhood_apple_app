@@ -20,9 +20,11 @@ struct Index :Codable {
 struct Grid: View {
     
     var item : MediaListType
-    @Binding var allMediaItems:[MediaListType]
     @State var isFocused = false
+    @State private var itemIndex = 2
+    @State var isItemFocusable = true
     
+    @Binding var allMediaItems:[MediaListType]
     @Binding var isPreviewVideoStatus:Bool
     @Binding var currentPaginationNum:Int
     @Binding var isCornerScreenFocused:Bool
@@ -31,10 +33,9 @@ struct Grid: View {
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
     @Binding var isPresentingAlert:Bool
-    @State var isItemFocusable = true
-    @FocusState private var isPreviousFocused: Bool
+    @Binding var isCollapseSideBar:Bool
     
-    @State private var itemIndex = 2
+    @FocusState private var isPreviousFocused: Bool
     
     let publish = NotificationCenter.default.publisher(for: NSNotification.Name.previousItemIndex)
     var body: some View {
@@ -60,7 +61,7 @@ struct Grid: View {
             .border(.white, width: (isFocused ? 8 : 2))
         }
         .scaleEffect(isFocused ? 1.1 : 1)
-        .focusable(isItemFocusable) { newState in
+        .focusable(isCollapseSideBar ? false : isItemFocusable) { newState in
             isFocused = newState;
             if newState {
                 isPreviewVideoStatus = true
@@ -311,6 +312,7 @@ struct MediaList: View {
     @Binding var currentVideoPlayURL:String
     @Binding var isVideoSectionFocused:Bool
     @Binding var isPresentingAlert:Bool
+    @Binding var isCollapseSideBar:Bool
     let columns = [
         GridItem(.flexible(), spacing: 10,
                  alignment: .top),
@@ -329,7 +331,7 @@ struct MediaList: View {
             ScrollViewReader { proxy in
                 LazyVGrid(columns: columns) {
                     ForEach(allMediaItems, id:\._id ) { item in
-                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
+                        Grid(item: item, allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, currentPaginationNum : $currentPaginationNum, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert, isCollapseSideBar:$isCollapseSideBar)
                     }
                 }
             }

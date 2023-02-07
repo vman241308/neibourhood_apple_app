@@ -35,22 +35,22 @@ struct ContentView: View {
             VStack {
                 switch self.isLocationItemFocused {
                 case 1:
-                    Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible)
+                    Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible, isCollapseSideBar:$isCollapseSideBar)
                         .background(Image("bg_full_2"))
                 case 2:
-                    Information(sideBarDividerFlag:$sideBarDividerFlag)
+                    Information(sideBarDividerFlag:$sideBarDividerFlag, isCollapseSideBar:$isCollapseSideBar)
                 default:
                     HStack {
                         /* ------------------ MainContent --------------------- */
                         VStack {
                             if !self.isPreviewVideoStatus {
                                 VStack {
-                                    Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus:$isPreviewVideoStatus)
+                                    Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus:$isPreviewVideoStatus, isCollapseSideBar:$isCollapseSideBar, isVideoSectionFocused:$isVideoSectionFocused)
                                 }
                             } else
                             if !self.isCornerScreenFocused {
                                 VStack {
-                                    Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription, isVideoSectionFocused:$isVideoSectionFocused, isPreviewVideoStatus:$isPreviewVideoStatus)
+                                    Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription, isVideoSectionFocused:$isVideoSectionFocused, isPreviewVideoStatus:$isPreviewVideoStatus,isCollapseSideBar:$isCollapseSideBar)
                                 }
                             }
                             
@@ -59,13 +59,13 @@ struct ContentView: View {
                                 
                                 if isCornerScreenFocused {
                                     Divider()
-                                        .focusable(isPreviewVideoStatus ? true : false) {newState in isTitleFocused = newState; onUpButtonToHome() }
+                                        .focusable(isPreviewVideoStatus ? isCollapseSideBar ? false : true : false) {newState in isTitleFocused = newState; onUpButtonToHome() }
                                 }
                                 else {
                                     Divider()
-                                        .focusable( !isVideoSectionFocused ? true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
+                                        .focusable( !isVideoSectionFocused ? isCollapseSideBar ? false : true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
                                 }
-                                MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
+                                MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert, isCollapseSideBar:$isCollapseSideBar)
                             }
                             .onExitCommand(perform: {
                                 if !self.isCornerScreenFocused {
@@ -84,7 +84,8 @@ struct ContentView: View {
                         .resizable()
                         .frame(width: 1920, height: 1080, alignment: .center))
                 }
-            }
+            }.opacity(isCollapseSideBar ? 0.1 : 1)
+            
             VStack {
                 SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible).frame(height: 1080).opacity(isSideBarVisible ? 0 : 1).onReceive(pub_sidebar) { (out_side) in
                     guard let _out_side = out_side.object as? Bool else {
