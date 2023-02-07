@@ -17,6 +17,7 @@ extension Color {
     static let infoMenuColor = Color(red: 47/255, green: 43/255, blue: 44/255)
     static let infoFocusColor = Color(red: 78/255, green: 73/255, blue: 78/255)
     static let sideBarBack = Color(red: 42/255, green: 37/255, blue: 38/255, opacity: 0.7)
+    static let sideBarCollapseBack = Color(red: 21/255, green: 71/255, blue: 122/255)
 }
 
 struct GridLocationItem: View {
@@ -34,6 +35,7 @@ struct GridLocationItem: View {
     @Binding var isLoadingVisible:Bool
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationPreviewVideoStatus:Bool
+    @Binding var isCollapseSideBar:Bool
     @FocusState var isLocationDefaultFocus:Bool
     
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -65,7 +67,7 @@ struct GridLocationItem: View {
             .overlay(RoundedRectangle(cornerRadius: 25).stroke(.white, lineWidth: (isLocationItemFocused ? 8 : 2)))
         }
         .scaleEffect(isLocationItemFocused ? 1.1 : 1)
-        .focusable(true) {newState in isLocationItemFocused = newState}
+        .focusable(isCollapseSideBar ? false : true) {newState in isLocationItemFocused = newState}
         .animation(.easeInOut, value: isLocationItemFocused)
         .focused($isLocationDefaultFocus)
         .onAppear() {
@@ -322,6 +324,7 @@ struct Location: View {
     @Binding var allLocationItems:[LocationModel]
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
+    @Binding var isCollapseSideBar:Bool
     
     @State var locationAllMediaItems:[MediaListType] = []
     @State var isLocationTitleFocused = false
@@ -344,7 +347,7 @@ struct Location: View {
                     
                     LazyVGrid(columns: locationColumns) {
                         ForEach(allLocationItems, id:\._id) { locationItem in
-                            GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible, isLoadingVisible:$isLoadingVisible, sideBarDividerFlag:$sideBarDividerFlag, isLocationPreviewVideoStatus:$isLocationPreviewVideoStatus)
+                            GridLocationItem(locationItem:locationItem, locationCurrentVideoPlayURL:$locationCurrentVideoPlayURL, locationAllMediaItems:$locationAllMediaItems, locationCurrentVideoTitle:$locationCurrentVideoTitle, isLocationVisible:$isLocationVisible, isLoadingVisible:$isLoadingVisible, sideBarDividerFlag:$sideBarDividerFlag, isLocationPreviewVideoStatus:$isLocationPreviewVideoStatus, isCollapseSideBar:$isCollapseSideBar)
                         }
                     }.frame(width: 1500)
                 }
@@ -361,13 +364,13 @@ struct Location: View {
                 VStack(alignment: .leading) {
                     if !isLocationPreviewVideoStatus {
                         VStack {
-                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isLocationPreviewVideoStatus)
+                            Home(currentVideoPlayURL:$locationCurrentVideoPlayURL, currentVideoTitle:$locationCurrentVideoTitle, isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isPreviewVideoStatus: $isLocationPreviewVideoStatus, isCollapseSideBar:$isCollapseSideBar, isVideoSectionFocused:$isLocationVideoSectionFocused)
                                 .onExitCommand(perform: {isLocationVisible = true})
                         }
                     } else {
                         if !isLocationCornerScreenFocused {
                             VStack {
-                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isLocationPreviewVideoStatus)
+                                Description(currentVideoPlayURL:$locationCurrentVideoPlayURL,isFullScreenBtnClicked: $isLocationFullScreenBtnClicked, isCornerScreenFocused: $isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription: $locationCurrentVideoDescription, isVideoSectionFocused: $isLocationVideoSectionFocused,isPreviewVideoStatus: $isLocationPreviewVideoStatus, isCollapseSideBar:$isCollapseSideBar)
                             }
                         }
                     }
@@ -383,7 +386,7 @@ struct Location: View {
                                 .focusable( !isLocationVideoSectionFocused ? true : false ) { newState in isLocationTitleFocused = newState ; isLocationVideoSectionFocused = true  }
                         }
                         
-                        MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert)
+                        MediaList(allMediaItems:$locationAllMediaItems, isPreviewVideoStatus : $isLocationPreviewVideoStatus, isCornerScreenFocused:$isLocationCornerScreenFocused, currentVideoTitle:$locationCurrentVideoTitle, currentVideoDescription:$locationCurrentVideoDescription, currentVideoPlayURL:$locationCurrentVideoPlayURL, isVideoSectionFocused:$isLocationVideoSectionFocused, isPresentingAlert:$isPresentingAlert, isCollapseSideBar:$isCollapseSideBar)
                     }
                     .onExitCommand(perform: {
                         if !self.isLocationCornerScreenFocused {

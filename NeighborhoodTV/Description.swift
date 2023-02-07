@@ -17,6 +17,7 @@ struct Description: View {
     @Binding var currentVideoDescription:String
     @Binding var isVideoSectionFocused:Bool
     @Binding var isPreviewVideoStatus:Bool
+    @Binding var isCollapseSideBar:Bool
     
     @FocusState private var nameInfocused: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -42,7 +43,7 @@ struct Description: View {
                                     .border(isVideoSectionFocused ? .white : .gray)
                                     .foregroundColor(isVideoSectionFocused ? .black : .white)
                                     .cornerRadius(10)
-                                    .focusable(true) {newState in isVideoSectionFocused = newState }
+                                    .focusable(isCollapseSideBar ? false : true) {newState in isVideoSectionFocused = newState }
                                     .scaleEffect(isVideoSectionFocused ? 1.1 : 1)
                                     .onLongPressGesture(minimumDuration: 0.001, perform: {onFullScreenBtn()})
                                     .focused($nameInfocused)

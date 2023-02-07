@@ -25,14 +25,19 @@ extension String {
 struct Information: View {
     @State var infoCurrentTitle:String = ""
     @State var infoCurrentBody:String = ""
-    @FocusState private var InfoDefaultFocus: Bool
     @State var isInfoAboutUSFocus = false
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
     @State var isCurrentInfoClick: Int = 1
+    
     @Binding var sideBarDividerFlag:Bool
+    @Binding var isCollapseSideBar:Bool
+    
+    @FocusState private var InfoDefaultFocus: Bool
     @FocusState private var isInfoDefaultFocus:Bool
+    
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
@@ -44,7 +49,7 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoAboutUSFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isInfoAboutUSFocus = newState }
+                .focusable(isCollapseSideBar ? false : true) {newState in isInfoAboutUSFocus = newState }
                 .focused($isInfoDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 1)})
                 .onAppear() {
@@ -71,7 +76,7 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoPrivacyPolicyFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isInfoPrivacyPolicyFocus = newState }
+                .focusable(isCollapseSideBar ? false : true) {newState in isInfoPrivacyPolicyFocus = newState }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 2)})
                 
                 Label {
@@ -82,7 +87,7 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoVisitorAgreementFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isInfoVisitorAgreementFocus = newState }
+                .focusable(isCollapseSideBar ? false : true) {newState in isInfoVisitorAgreementFocus = newState }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 3)})
                 
                 Spacer()
@@ -101,7 +106,7 @@ struct Information: View {
                 //                }
             }.onAppear() {
                 getCurrentInfo(isCurrentInfoClick: 1)
-            }.focusable(true)
+            }.focusable(isCollapseSideBar ? false : true)
                 .frame(height: 900)
             
             Spacer()

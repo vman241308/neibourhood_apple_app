@@ -56,6 +56,7 @@ extension Notification.Name {
     static let previousItemIndex = Notification.Name("previousItemIndex")
     static let locationDefaultFocus = Notification.Name("locationDefaultFocus")
     static let onFullBtnAction = Notification.Name("onFullBtnAction")
+    static let isCollapseSideBar = Notification.Name("isCollapseSideBar")
 }
 
 /* RefreshToken Model */

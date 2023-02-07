@@ -15,6 +15,8 @@ struct Home: View {
     @Binding var currentVideoTitle:String
     @Binding var isFullScreenBtnClicked:Bool
     @Binding var isPreviewVideoStatus:Bool
+    @Binding var isCollapseSideBar:Bool
+    @Binding var isVideoSectionFocused:Bool
     
     @FocusState private var nameInfocus: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -37,24 +39,31 @@ struct Home: View {
                                 .font(.custom("Arial Round MT Bold", fixedSize: 35))
                             
                             
-                            Button(action: {onFullScreenBtn()}){
-                                Text("Watch in FullScreen").font(.custom("Arial Round MT Bold", fixedSize: 25))
-                            }
-                            .focused($nameInfocus)
-                            .onAppear() {
-                                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                            Text("Watch in FullScreen").font(.custom("Arial Round MT Bold", fixedSize: 25))
+                                .padding(20)
+                                .padding(.horizontal, 20)
+                                .background(isVideoSectionFocused ? .white : .gray)
+                                .border(isVideoSectionFocused ? .white : .gray)
+                                .foregroundColor(isVideoSectionFocused ? .black : .white)
+                                .cornerRadius(10)
+                                .focusable(isCollapseSideBar ? false : true) {newState in isVideoSectionFocused = newState }
+                                .scaleEffect(isVideoSectionFocused ? 1.1 : 1)
+                                .onLongPressGesture(minimumDuration: 0.001, perform: {onFullScreenBtn()})
+                                .focused($nameInfocus)
+                                .onAppear() {
+                                    DispatchQueue.main.asyncAfter(deadline: .now()) {
                                         self.nameInfocus = true
+                                    }
                                 }
-                            }
-                            .onReceive(pub_default_focus) { (out_location_default) in
-                                guard let _out_location_default = out_location_default.object as? Bool else {
-                                    print("Invalid URL")
-                                    return
-                                }
-                                if _out_location_default {
+                                .onReceive(pub_default_focus) { (out_location_default) in
+                                    guard let _out_location_default = out_location_default.object as? Bool else {
+                                        print("Invalid URL")
+                                        return
+                                    }
+                                    if _out_location_default {
                                         self.nameInfocus = true
+                                    }
                                 }
-                            }
                         }
                         .opacity((isFullScreenBtnClicked ? 0 : 1))
                         .padding(35)
@@ -63,7 +72,7 @@ struct Home: View {
                 }
             }
             .frame(width: 1500)
-//            .frame(width: 1500, height: 850)
+            //            .frame(width: 1500, height: 850)
         }
     }
     

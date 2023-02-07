@@ -17,6 +17,7 @@ struct SideBar: View {
     @State var isSideLockFocus = false
     @State var isDividerFocus1 = false
     @State var isDividerFocus2 = false
+    @State var isDividerFocus3 = false
     @State var isSideFocusState = false
     @Binding var isCollapseSideBar:Bool
     @Binding var isPreviewVideoStatus:Bool
@@ -26,6 +27,7 @@ struct SideBar: View {
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
     @FocusState private var isSideDefaultFocus:Bool
+    let pub_isCollapseSideBar = NotificationCenter.default.publisher(for: NSNotification.Name.isCollapseSideBar)
     var body: some View {
         HStack(spacing: 1) {
             VStack {
@@ -40,8 +42,13 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideHomeFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}}
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isSideFocusState ? (isSideHomeFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 0 ? Color.white : Color.infoMenuColor), lineWidth: 3)
+                )
+                .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
+                
                 
                 Label {
                     if isCollapseSideBar {
@@ -53,7 +60,11 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideLocationFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false} }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isSideFocusState ? (isSideLocationFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 1 ? Color.white : Color.infoMenuColor), lineWidth: 3)
+                )
+                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus() }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationButton()})
                 
                 Label {
@@ -66,8 +77,12 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideInfoFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}}
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 2})
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isSideFocusState ? (isSideInfoFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 2 ? Color.white : Color.infoMenuColor), lineWidth: 3)
+                )
+                .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
+                .onLongPressGesture(minimumDuration: 0.001, perform: {onInfoButton()})
                 
                 Label {
                     if isCollapseSideBar {
@@ -79,26 +94,35 @@ struct SideBar: View {
                 .padding(20)
                 .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
-                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}}
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isSideDefaultFocus ? Color.white : Color.infoMenuColor), lineWidth: 3)
+                )
+                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
                 .focused($isSideDefaultFocus)
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isCollapseSideBar.toggle(); })
+                .onLongPressGesture(minimumDuration: 0.001, perform: {onLockButton()})
                 
                 Spacer()
             }
             .padding(.top, 50)
             .frame(width: (isCollapseSideBar ? 350 : 140 ))
-            .background(Color.sideBarBack)
+            .background(isCollapseSideBar ? Color.sideBarCollapseBack : Color.sideBarBack)
             
             if sideBarDividerFlag {
-                Divider().focusable(true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
+                Divider().focusable(isCollapseSideBar ? false : true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
             } else {
-                
-                Divider().focusable(true) { newState in isDividerFocus2 = newState; fromContentToDivider()}
+                Divider().focusable(isCollapseSideBar ? false : true) { newState in isDividerFocus2 = newState; fromContentToDivider()}
             }
             
             
             Spacer()
         }.padding(.leading, -80)
+    }
+    
+    func onCollapseStatus() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .isCollapseSideBar, object: isCollapseSideBar)
+        }
     }
     
     func fromDividerToContent() {
@@ -111,6 +135,15 @@ struct SideBar: View {
     func fromContentToDivider() {
         self.isSideDefaultFocus = true
         sideBarDividerFlag = true
+    }
+    
+    func onInfoButton() {
+        isLocationItemFocused = 2
+        isCollapseSideBar = false
+    }
+    
+    func onLockButton() {
+        isCollapseSideBar.toggle()
     }
     
     func onHomeButton() {
@@ -131,10 +164,12 @@ struct SideBar: View {
         currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
+        isCollapseSideBar = false
     }
     
     func onLocationButton() {
         isLocationItemFocused = 1
         isLocationVisible = true
+        isCollapseSideBar = false
     }
 }
