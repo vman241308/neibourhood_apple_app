@@ -26,13 +26,16 @@ struct ContentView: View {
     @State private var isPresentingAlert: Bool = false
     @State var isCollapseSideBar:Bool = false
     @State var sideBarDividerFlag:Bool = false
+    @State var isLocationVisible:Bool = true
+    @State var isSideBarVisible:Bool = false
     
+    let pub_sidebar = NotificationCenter.default.publisher(for: NSNotification.Name.onFullBtnAction)
     var body: some View {
         ZStack {
             VStack {
                 switch self.isLocationItemFocused {
                 case 1:
-                    Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag, isPreviewVideoStatus:$isPreviewVideoStatus)
+                    Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible)
                         .background(Image("bg_full_2"))
                 case 2:
                     Information(sideBarDividerFlag:$sideBarDividerFlag)
@@ -82,17 +85,16 @@ struct ContentView: View {
                         .frame(width: 1920, height: 1080, alignment: .center))
                 }
             }
-            
             VStack {
-                SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, sideBarDividerFlag:$sideBarDividerFlag).frame(height: 1080)
+                SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible).frame(height: 1080).opacity(isSideBarVisible ? 0 : 1).onReceive(pub_sidebar) { (out_side) in
+                    guard let _out_side = out_side.object as? Bool else {
+                        print("Invalid URL")
+                        return
+                    }
+                    self.isSideBarVisible = _out_side
+                }
             }
-           
-            
-            
         }
-        
-        
-        
     }
     
     func onUpButtonToHome () {

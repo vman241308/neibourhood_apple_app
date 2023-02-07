@@ -25,7 +25,7 @@ struct Home: View {
                 PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
                     .shadow(color: .black, radius: 10)
                     .frame(width: (isFullScreenBtnClicked ? 1920 : 1500), height: (isFullScreenBtnClicked ? 1080 : 850))
-                    .onExitCommand(perform: {isFullScreenBtnClicked = false})
+                    .onExitCommand(perform: {onVideoBackButton()})
                     .padding(.top , (!isFullScreenBtnClicked ? 0 : 230) )
                     .focusable(false)
                 
@@ -37,7 +37,7 @@ struct Home: View {
                                 .font(.custom("Arial Round MT Bold", fixedSize: 35))
                             
                             
-                            Button(action: {isFullScreenBtnClicked = true}){
+                            Button(action: {onFullScreenBtn()}){
                                 Text("Watch in FullScreen").font(.custom("Arial Round MT Bold", fixedSize: 25))
                             }
                             .focused($nameInfocus)
@@ -64,6 +64,20 @@ struct Home: View {
             }
             .frame(width: 1500)
 //            .frame(width: 1500, height: 850)
+        }
+    }
+    
+    func onFullScreenBtn() {
+        isFullScreenBtnClicked = true
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .onFullBtnAction, object: isFullScreenBtnClicked)
+        }
+    }
+    
+    func onVideoBackButton() {
+        isFullScreenBtnClicked = false
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .onFullBtnAction, object: isFullScreenBtnClicked)
         }
     }
 }

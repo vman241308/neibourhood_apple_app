@@ -24,9 +24,10 @@ struct SideBar: View {
     @Binding var currentVideoPlayURL:String
     @Binding var currentVideoTitle:String
     @Binding var sideBarDividerFlag:Bool
+    @Binding var isLocationVisible:Bool
     @FocusState private var isSideDefaultFocus:Bool
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 1) {
             VStack {
                 Label {
                 } icon: {
@@ -53,7 +54,7 @@ struct SideBar: View {
                 .background(isSideLocationFocus ? Color.gray : Color.infoMenuColor)
                 .cornerRadius(10)
                 .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false} }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 1})
+                .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationButton()})
                 
                 Label {
                     if isCollapseSideBar {
@@ -130,5 +131,10 @@ struct SideBar: View {
         currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
+    }
+    
+    func onLocationButton() {
+        isLocationItemFocused = 1
+        isLocationVisible = true
     }
 }
