@@ -17,6 +17,7 @@ struct Home: View {
     @Binding var isPreviewVideoStatus:Bool
     
     @FocusState private var nameInfocus: Bool
+    let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     
     var body: some View {
         VStack{
@@ -45,6 +46,15 @@ struct Home: View {
                                         self.nameInfocus = true
                                 }
                             }
+                            .onReceive(pub_default_focus) { (out_location_default) in
+                                guard let _out_location_default = out_location_default.object as? Bool else {
+                                    print("Invalid URL")
+                                    return
+                                }
+                                if _out_location_default {
+                                        self.nameInfocus = true
+                                }
+                            }
                         }
                         .opacity((isFullScreenBtnClicked ? 0 : 1))
                         .padding(35)
@@ -52,7 +62,8 @@ struct Home: View {
                     }
                 }
             }
-            .frame(width: 1500, height: 850)
+            .frame(width: 1500)
+//            .frame(width: 1500, height: 850)
         }
     }
 }

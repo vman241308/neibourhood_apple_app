@@ -84,11 +84,11 @@ struct SideBar: View {
                 
                 Spacer()
             }
+            .padding(.top, 50)
             .frame(width: (isCollapseSideBar ? 350 : 140 ))
             .background(Color.sideBarBack)
             
             if sideBarDividerFlag {
-               
                 Divider().focusable(true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
             } else {
                 
