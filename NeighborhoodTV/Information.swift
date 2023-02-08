@@ -34,7 +34,7 @@ struct Information: View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
                 Label {
-                    Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
+                    Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "person.3").resizable().frame(width: 40, height: 25)
                 }
@@ -65,7 +65,7 @@ struct Information: View {
                 }
                 
                 Label {
-                    Text("Privacy Policy").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
+                    Text("Privacy Policy").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "exclamationmark.shield").resizable().frame(width: 40, height: 40)
                 }
@@ -80,7 +80,7 @@ struct Information: View {
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 2; getCurrentInfo()})
                 
                 Label {
-                    Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
+                    Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "printer").resizable().frame(width: 40, height: 40)
                 }
