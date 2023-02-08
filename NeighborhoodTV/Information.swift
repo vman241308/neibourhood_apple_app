@@ -12,19 +12,9 @@ import SwiftUI
 import FoundationNetworking
 #endif
 
-extension String {
-    func markDownToAttributed() -> AttributedString {
-        do {
-            return try AttributedString(markdown: self)
-        } catch {
-            return AttributedString("Error parsing markdown:\(error)")
-        }
-    }
-}
-
 struct Information: View {
     @State var infoCurrentTitle:String = ""
-    @State var infoCurrentBody:String = ""
+    @State var infoCurrentBody = NSAttributedString()
     @State var isInfoAboutUSFocus = false
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
@@ -35,6 +25,8 @@ struct Information: View {
     
     @FocusState private var InfoDefaultFocus: Bool
     @FocusState private var isInfoDefaultFocus:Bool
+    
+    let textView = UITextView()
     
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     
@@ -49,9 +41,13 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoAboutUSFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isCurrentInfoClick == 1 ? Color.white : Color.infoMenuColor), lineWidth: 1)
+                )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoAboutUSFocus = newState }
                 .focused($isInfoDefaultFocus)
-                .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 1)})
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 1; getCurrentInfo()})
                 .onAppear() {
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
                         self.isInfoDefaultFocus = true
@@ -76,8 +72,12 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoPrivacyPolicyFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isCurrentInfoClick == 2 ? Color.white : Color.infoMenuColor), lineWidth: 1)
+                )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoPrivacyPolicyFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 2)})
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 2; getCurrentInfo()})
                 
                 Label {
                     Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250)
@@ -87,8 +87,12 @@ struct Information: View {
                 .padding(20)
                 .background(isInfoVisitorAgreementFocus ? Color.infoFocusColor : Color.infoMenuColor)
                 .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke((isCurrentInfoClick == 3 ? Color.white : Color.infoMenuColor), lineWidth: 1)
+                )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoVisitorAgreementFocus = newState }
-                .onLongPressGesture(minimumDuration: 0.001, perform: {getCurrentInfo(isCurrentInfoClick: 3)})
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 3; getCurrentInfo()})
                 
                 Spacer()
             }
@@ -97,69 +101,75 @@ struct Information: View {
             .padding(.top, 50)
             .background(Color.infoMenuColor)
             
-            
-            VStack(alignment: .center, spacing: 30) {
-                //                ScrollView {
-                Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
-                Text(infoCurrentBody.markDownToAttributed())
-                Spacer()
-                //                }
-            }.onAppear() {
-                getCurrentInfo(isCurrentInfoClick: 1)
-            }.focusable(isCollapseSideBar ? false : true)
-                .frame(height: 900)
-            
+            ScrollView {
+                ScrollViewReader { proxy in
+                    VStack(alignment: .center, spacing: 30) {
+                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
+                        Text(infoCurrentBody.string)
+                        Spacer()
+                    }
+                    .onAppear() {
+                        getCurrentInfo()
+                    }.focusable(isCollapseSideBar ? false : true)
+                        .frame(height: 900)
+                }
+            }.frame(height: 900).focusable(false)
             Spacer()
             
         }
         
     }
     
-    func getCurrentInfo(isCurrentInfoClick: Int) -> Int {
+    func getCurrentInfo() {
         switch isCurrentInfoClick {
         case 2:
             guard let _title_privacy_policy = UserDefaults.standard.object(forKey: "privacy_policy_seo_title") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             guard let _body_privacy_policy = UserDefaults.standard.object(forKey: "privacy_policy_page_body") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             infoCurrentTitle = _title_privacy_policy
-            infoCurrentBody = _body_privacy_policy
-            
+            let htmlData = NSString(string: _body_privacy_policy).data(using: String.Encoding.unicode.rawValue)
+            let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
+            let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
+            infoCurrentBody = attributedString
         case 3:
             guard let _title_visitor_agreement = UserDefaults.standard.object(forKey: "visitor_agreement_seo_title") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             guard let _body_visitor_agreement = UserDefaults.standard.object(forKey: "visitor_agreement_page_body") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             infoCurrentTitle = _title_visitor_agreement
-            infoCurrentBody = _body_visitor_agreement
+            let htmlData = NSString(string: _body_visitor_agreement).data(using: String.Encoding.unicode.rawValue)
+            let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
+            let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
+            infoCurrentBody = attributedString
         default:
             guard let _title_about_us = UserDefaults.standard.object(forKey: "about_us_seo_title") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             guard let _body_about_us = UserDefaults.standard.object(forKey: "about_us_page_body") as? String else {
                 print("Invalid _title_about_us")
-                return isCurrentInfoClick
+                return
             }
             
             infoCurrentTitle = _title_about_us
-            infoCurrentBody = _body_about_us
+            let htmlData = NSString(string: _body_about_us).data(using: String.Encoding.unicode.rawValue)
+            let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
+            let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
+            infoCurrentBody = attributedString
         }
-        
-        return isCurrentInfoClick
-        
     }
 }
