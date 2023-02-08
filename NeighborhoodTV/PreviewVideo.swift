@@ -10,7 +10,6 @@ import AVKit
 
 struct PreviewVideo: View {
     @Binding var currentVideoPlayURL:String
-//    @Binding var isCollapseSideBar:Bool
     @State private var player : AVQueuePlayer?
     @State private var videoLooper: AVPlayerLooper?
     let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)

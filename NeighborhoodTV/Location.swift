@@ -250,7 +250,7 @@ struct GridLocationItem: View {
             var locationPreviewVideoRequest = URLRequest(url: locationPreviewVideoParseURL)
             locationPreviewVideoRequest.httpMethod = "POST"
             locationPreviewVideoRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            locationPreviewVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            locationPreviewVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             locationPreviewVideoRequest.httpBody = jsonAccessKeyData
             locationPreviewVideoRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
@@ -288,7 +288,7 @@ struct GridLocationItem: View {
                         return
                     }
                     
-                    //                    locationCurrentVideoPlayURL = _currentVideoPlayURL
+//                                        locationCurrentVideoPlayURL = _currentVideoPlayURL
                     locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
@@ -311,7 +311,6 @@ struct GridLocationItem: View {
 }
 
 struct Location: View {
-//    @State var isLocationVisible = true
     @State var locationCurrentVideoPlayURL:String = ""
     @State var isLocationFullScreenBtnClicked:Bool = false
     @State var locationCurrentVideoTitle:String = ""

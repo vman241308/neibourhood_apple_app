@@ -19,9 +19,8 @@ struct ContentView: View {
     @State var isCornerScreenFocused = true
     @State var isTitleFocused = false
     @State var isVideoSectionFocused = false
-    //    @State var descriptionPreviewVideo: PreviewVideo = PreviewVideo(currentVideoPlayURL: )
     
-    @State var isLocationItemFocused:Int = 2
+    @State var isLocationItemFocused:Int = 0
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     @State private var isPresentingAlert: Bool = false
     @State var isCollapseSideBar:Bool = false

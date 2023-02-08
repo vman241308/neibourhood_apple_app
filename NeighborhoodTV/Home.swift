@@ -71,8 +71,7 @@ struct Home: View {
                     }
                 }
             }
-            .frame(width: 1500)
-            //            .frame(width: 1500, height: 850)
+            .frame(width: 1500, height: 850)
         }
     }
     
