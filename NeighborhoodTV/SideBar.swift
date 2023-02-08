@@ -14,7 +14,7 @@ struct SideBar: View {
     @State var isSideHomeFocus = false
     @State var isSideLocationFocus = false
     @State var isSideInfoFocus = false
-    @State var isSideLockFocus = false
+//    @State var isSideLockFocus = false
     @State var isDividerFocus1 = false
     @State var isDividerFocus2 = false
     @State var isDividerFocus3 = false
@@ -47,12 +47,16 @@ struct SideBar: View {
                         .stroke((isSideFocusState ? (isSideHomeFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 0 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
                 .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
+                .focused($isSideDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
                 
                 
                 Label {
                     if isCollapseSideBar {
-                        Text("Choose Stream").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+                        VStack(alignment: .leading){
+                            Text("Choose Stream").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150, alignment: .leading)
+                        }
+                        
                     }
                 } icon: {
                     Image("location").resizable().frame(width: 50, height: 50)
@@ -64,12 +68,12 @@ struct SideBar: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke((isSideFocusState ? (isSideLocationFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 1 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
-                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus() }
+                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true; isCollapseSideBar = true} else { isSideFocusState = false; isCollapseSideBar = false}; onCollapseStatus() }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationButton()})
                 
                 Label {
                     if isCollapseSideBar {
-                        Text("Information").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+                        Text("Information").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150, alignment: .leading)
                     }
                 } icon: {
                     Image("info").resizable().frame(width: 50, height: 50)
@@ -84,23 +88,23 @@ struct SideBar: View {
                 .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onInfoButton()})
                 
-                Label {
-                    if isCollapseSideBar {
-                        Text("Lock").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
-                    }
-                } icon: {
-                    Image("lock").resizable().frame(width: 50, height: 50)
-                }
-                .padding(20)
-                .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
-                .cornerRadius(10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke((isSideDefaultFocus ? Color.white : Color.infoMenuColor), lineWidth: 3)
-                )
-                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
-                .focused($isSideDefaultFocus)
-                .onLongPressGesture(minimumDuration: 0.001, perform: {onLockButton()})
+//                Label {
+//                    if isCollapseSideBar {
+//                        Text("Lock").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
+//                    }
+//                } icon: {
+//                    Image("lock").resizable().frame(width: 50, height: 50)
+//                }
+//                .padding(20)
+//                .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
+//                .cornerRadius(10)
+//                .overlay(
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .stroke((isSideDefaultFocus ? Color.white : Color.infoMenuColor), lineWidth: 3)
+//                )
+//                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
+//                .focused($isSideDefaultFocus)
+//                .onLongPressGesture(minimumDuration: 0.001, perform: {onLockButton()})
                 
                 Spacer()
             }
@@ -142,9 +146,9 @@ struct SideBar: View {
         isCollapseSideBar = false
     }
     
-    func onLockButton() {
-        isCollapseSideBar.toggle()
-    }
+//    func onLockButton() {
+//        isCollapseSideBar.toggle()
+//    }
     
     func onHomeButton() {
         guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {

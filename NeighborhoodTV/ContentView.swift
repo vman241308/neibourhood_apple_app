@@ -19,9 +19,8 @@ struct ContentView: View {
     @State var isCornerScreenFocused = true
     @State var isTitleFocused = false
     @State var isVideoSectionFocused = false
-    //    @State var descriptionPreviewVideo: PreviewVideo = PreviewVideo(currentVideoPlayURL: )
     
-    @State var isLocationItemFocused:Int = 2
+    @State var isLocationItemFocused:Int = 0
     @State var currentVideoDescription:String =  (UserDefaults.standard.object(forKey: "currentVideoDescription") as? String ?? "")
     @State private var isPresentingAlert: Bool = false
     @State var isCollapseSideBar:Bool = false
@@ -35,22 +34,46 @@ struct ContentView: View {
             VStack {
                 switch self.isLocationItemFocused {
                 case 1:
-                    Location(allLocationItems:$allLocationItems, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible, isCollapseSideBar:$isCollapseSideBar)
-                        .background(Image("bg_full_2"))
+                    Location(
+                        allLocationItems:$allLocationItems,
+                        sideBarDividerFlag:$sideBarDividerFlag,
+                        isLocationVisible:$isLocationVisible,
+                        isCollapseSideBar:$isCollapseSideBar
+                    )
+                    .background(Image("bg_full_2"))
                 case 2:
-                    Information(sideBarDividerFlag:$sideBarDividerFlag, isCollapseSideBar:$isCollapseSideBar)
+                    Information(
+                        sideBarDividerFlag:$sideBarDividerFlag,
+                        isCollapseSideBar:$isCollapseSideBar
+                    )
                 default:
                     HStack {
                         /* ------------------ MainContent --------------------- */
                         VStack {
                             if !self.isPreviewVideoStatus {
                                 VStack {
-                                    Home(currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, isFullScreenBtnClicked: $isFullScreenBtnClicked, isPreviewVideoStatus:$isPreviewVideoStatus, isCollapseSideBar:$isCollapseSideBar, isVideoSectionFocused:$isVideoSectionFocused)
+                                    Home(
+                                        currentVideoPlayURL:$currentVideoPlayURL,
+                                        currentVideoTitle:$currentVideoTitle,
+                                        isFullScreenBtnClicked: $isFullScreenBtnClicked,
+                                        isPreviewVideoStatus:$isPreviewVideoStatus,
+                                        isCollapseSideBar:$isCollapseSideBar,
+                                        isVideoSectionFocused:$isVideoSectionFocused
+                                    )
                                 }
                             } else
                             if !self.isCornerScreenFocused {
                                 VStack {
-                                    Description(currentVideoPlayURL:$currentVideoPlayURL, isFullScreenBtnClicked: $isFullScreenBtnClicked, isCornerScreenFocused: $isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription: $currentVideoDescription, isVideoSectionFocused:$isVideoSectionFocused, isPreviewVideoStatus:$isPreviewVideoStatus,isCollapseSideBar:$isCollapseSideBar)
+                                    Description(
+                                        currentVideoPlayURL:$currentVideoPlayURL,
+                                        isFullScreenBtnClicked: $isFullScreenBtnClicked,
+                                        isCornerScreenFocused: $isCornerScreenFocused,
+                                        currentVideoTitle:$currentVideoTitle,
+                                        currentVideoDescription: $currentVideoDescription,
+                                        isVideoSectionFocused:$isVideoSectionFocused,
+                                        isPreviewVideoStatus:$isPreviewVideoStatus,
+                                        isCollapseSideBar:$isCollapseSideBar
+                                    )
                                 }
                             }
                             
@@ -65,7 +88,17 @@ struct ContentView: View {
                                     Divider()
                                         .focusable( !isVideoSectionFocused ? isCollapseSideBar ? false : true : false ) { newState in isTitleFocused = newState ; isVideoSectionFocused = true  }
                                 }
-                                MediaList(allMediaItems:$allMediaItems, isPreviewVideoStatus : $isPreviewVideoStatus, isCornerScreenFocused:$isCornerScreenFocused, currentVideoTitle:$currentVideoTitle, currentVideoDescription:$currentVideoDescription, currentVideoPlayURL:$currentVideoPlayURL, isVideoSectionFocused:$isVideoSectionFocused, isPresentingAlert:$isPresentingAlert, isCollapseSideBar:$isCollapseSideBar)
+                                MediaList(
+                                    allMediaItems:$allMediaItems,
+                                    isPreviewVideoStatus : $isPreviewVideoStatus,
+                                    isCornerScreenFocused:$isCornerScreenFocused,
+                                    currentVideoTitle:$currentVideoTitle,
+                                    currentVideoDescription:$currentVideoDescription,
+                                    currentVideoPlayURL:$currentVideoPlayURL,
+                                    isVideoSectionFocused:$isVideoSectionFocused,
+                                    isPresentingAlert:$isPresentingAlert,
+                                    isCollapseSideBar:$isCollapseSideBar
+                                )
                             }
                             .onExitCommand(perform: {
                                 if !self.isCornerScreenFocused {
@@ -87,7 +120,18 @@ struct ContentView: View {
             }.opacity(isCollapseSideBar ? 0.1 : 1)
             
             VStack {
-                SideBar(isCollapseSideBar:$isCollapseSideBar, isPreviewVideoStatus:$isPreviewVideoStatus, isLocationItemFocused:$isLocationItemFocused, currentVideoPlayURL:$currentVideoPlayURL, currentVideoTitle:$currentVideoTitle, sideBarDividerFlag:$sideBarDividerFlag, isLocationVisible:$isLocationVisible).frame(height: 1080).opacity(isSideBarVisible ? 0 : 1).onReceive(pub_sidebar) { (out_side) in
+                SideBar(
+                    isCollapseSideBar:$isCollapseSideBar,
+                    isPreviewVideoStatus:$isPreviewVideoStatus,
+                    isLocationItemFocused:$isLocationItemFocused,
+                    currentVideoPlayURL:$currentVideoPlayURL,
+                    currentVideoTitle:$currentVideoTitle,
+                    sideBarDividerFlag:$sideBarDividerFlag,
+                    isLocationVisible:$isLocationVisible
+                )
+                .frame(height: 1080)
+                .opacity(isSideBarVisible ? 0 : 1)
+                .onReceive(pub_sidebar) { (out_side) in
                     guard let _out_side = out_side.object as? Bool else {
                         print("Invalid URL")
                         return

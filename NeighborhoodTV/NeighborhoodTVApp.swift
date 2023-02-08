@@ -267,7 +267,7 @@ struct NeighborhoodTVApp: App {
             var previewVideoRequest = URLRequest(url: previewVideoParseURL)
             previewVideoRequest.httpMethod = "POST"
             previewVideoRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            previewVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            previewVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             previewVideoRequest.httpBody = jsonAccessKeyData
             previewVideoRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
@@ -307,7 +307,7 @@ struct NeighborhoodTVApp: App {
                     }
                     
 //                                        currentVideoPlayURL = _currentVideoPlayURL
-                    currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                    currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
                     UserDefaults.standard.set(currentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
@@ -405,7 +405,7 @@ struct NeighborhoodTVApp: App {
             var infoPrivacyPolicyRequest = URLRequest(url: infoPrivacyPolicyParseURL)
             infoPrivacyPolicyRequest.httpMethod = "POST"
             infoPrivacyPolicyRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            infoPrivacyPolicyRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            infoPrivacyPolicyRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             infoPrivacyPolicyRequest.httpBody = jsonDefaultData
             infoPrivacyPolicyRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
@@ -470,7 +470,7 @@ struct NeighborhoodTVApp: App {
             var infoVisitorAgreementRequest = URLRequest(url: infoVisitorAgreementParseURL)
             infoVisitorAgreementRequest.httpMethod = "POST"
             infoVisitorAgreementRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            infoVisitorAgreementRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            infoVisitorAgreementRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             infoVisitorAgreementRequest.httpBody = jsonDefaultData
             infoVisitorAgreementRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             

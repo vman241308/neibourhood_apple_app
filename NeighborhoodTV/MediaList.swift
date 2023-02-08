@@ -15,8 +15,6 @@ struct Index :Codable {
     var itemIndex:Int
 }
 
-
-
 struct Grid: View {
     
     var item : MediaListType
@@ -125,7 +123,7 @@ struct Grid: View {
                 var offsetMediaListRequest = URLRequest(url: offsetMenuListParseURL)
                 offsetMediaListRequest.httpMethod = "POST"
                 offsetMediaListRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-                offsetMediaListRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+                offsetMediaListRequest.setValue("application/json", forHTTPHeaderField: "Accept")
                 offsetMediaListRequest.httpBody = jsonDefaultData
                 offsetMediaListRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 URLSession.shared.dataTask(with: offsetMediaListRequest ) { data, response, error in
@@ -223,7 +221,7 @@ struct Grid: View {
             var descriptionVideoRequest = URLRequest(url: descriptionVideoParseURL)
             descriptionVideoRequest.httpMethod = "POST"
             descriptionVideoRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            descriptionVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept") // the response expected to be in JSON format
+            descriptionVideoRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             descriptionVideoRequest.httpBody = jsonItemAccessKeyData
             descriptionVideoRequest.setValue( "Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             
