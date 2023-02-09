@@ -188,6 +188,8 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
+        currentVideoPlayURL = ""
+        
         do {
             guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
                 print("Invalid accessToken")
@@ -266,7 +268,7 @@ struct Grid: View {
 //                    currentVideoPlayURL = _currentLocationVideoPlayURL
 
                                         if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/video.mp4"
+                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
                                         } else {
                                             currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                                         }
