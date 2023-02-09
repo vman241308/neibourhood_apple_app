@@ -31,6 +31,7 @@ struct SideBar: View {
     var body: some View {
         HStack(spacing: 1) {
             VStack {
+               
                 Label {
                 } icon: {
                     if isCollapseSideBar {
@@ -48,8 +49,7 @@ struct SideBar: View {
                 )
                 .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
                 .focused($isSideDefaultFocus)
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
-                
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})                
                 
                 Label {
                     if isCollapseSideBar {
@@ -68,7 +68,7 @@ struct SideBar: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke((isSideFocusState ? (isSideLocationFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 1 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
-                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true; isCollapseSideBar = true} else { isSideFocusState = false; isCollapseSideBar = false}; onCollapseStatus() }
+                .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus() }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationButton()})
                 
                 Label {
@@ -88,24 +88,6 @@ struct SideBar: View {
                 .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onInfoButton()})
                 
-//                Label {
-//                    if isCollapseSideBar {
-//                        Text("Lock").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150)
-//                    }
-//                } icon: {
-//                    Image("lock").resizable().frame(width: 50, height: 50)
-//                }
-//                .padding(20)
-//                .background(isSideLockFocus ? Color.gray : Color.infoMenuColor)
-//                .cornerRadius(10)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: 10)
-//                        .stroke((isSideDefaultFocus ? Color.white : Color.infoMenuColor), lineWidth: 3)
-//                )
-//                .focusable(true) {newState in isSideLockFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
-//                .focused($isSideDefaultFocus)
-//                .onLongPressGesture(minimumDuration: 0.001, perform: {onLockButton()})
-                
                 Spacer()
             }
             .padding(.top, 50)
@@ -113,7 +95,7 @@ struct SideBar: View {
             .background(isCollapseSideBar ? Color.sideBarCollapseBack : Color.sideBarBack)
             
             if sideBarDividerFlag {
-                Divider().focusable(isCollapseSideBar ? false : true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
+                Divider().focusable(true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}
             } else {
                 Divider().focusable(isCollapseSideBar ? false : true) { newState in isDividerFocus2 = newState; fromContentToDivider()}
             }
@@ -123,6 +105,8 @@ struct SideBar: View {
         }.padding(.leading, -80)
     }
     
+
+    
     func onCollapseStatus() {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .isCollapseSideBar, object: isCollapseSideBar)
@@ -130,14 +114,17 @@ struct SideBar: View {
     }
     
     func fromDividerToContent() {
+        self.isCollapseSideBar = false
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .locationDefaultFocus, object: true)
         }
+        
         sideBarDividerFlag = false
     }
     
     func fromContentToDivider() {
         self.isSideDefaultFocus = true
+        self.isCollapseSideBar = true
         sideBarDividerFlag = true
     }
     

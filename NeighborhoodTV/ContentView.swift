@@ -41,11 +41,17 @@ struct ContentView: View {
                         isCollapseSideBar:$isCollapseSideBar
                     )
                     .background(Image("bg_full_2"))
+                    .onExitCommand() {
+                        exit(0)
+                    }
                 case 2:
                     Information(
                         sideBarDividerFlag:$sideBarDividerFlag,
                         isCollapseSideBar:$isCollapseSideBar
                     )
+                    .onExitCommand() {
+                        exit(0)
+                    }
                 default:
                     HStack {
                         /* ------------------ MainContent --------------------- */
@@ -137,6 +143,9 @@ struct ContentView: View {
                         return
                     }
                     self.isSideBarVisible = _out_side
+                }
+                .onExitCommand() {
+                    exit(0)
                 }
             }
         }
