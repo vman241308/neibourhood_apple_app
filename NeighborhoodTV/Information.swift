@@ -23,7 +23,8 @@ struct Information: View {
     @Binding var sideBarDividerFlag:Bool
     @Binding var isCollapseSideBar:Bool
     
-    @FocusState private var InfoDefaultFocus: Bool
+    @FocusState private var isAbDefaultFocus:Bool
+    @FocusState private var isPPDefaultFocus:Bool
     @FocusState private var isInfoDefaultFocus:Bool
     
     let textView = UITextView()
@@ -34,7 +35,7 @@ struct Information: View {
         HStack {
             VStack(alignment: .leading, spacing: 30) {
                 Label {
-                    Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
+                    Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "person.3").resizable().frame(width: 40, height: 25)
                 }
@@ -46,26 +47,26 @@ struct Information: View {
                         .stroke((isCurrentInfoClick == 1 ? Color.white : Color.infoMenuColor), lineWidth: 1)
                 )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoAboutUSFocus = newState }
-                .focused($isInfoDefaultFocus)
+                .focused($isAbDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 1; getCurrentInfo()})
                 .onAppear() {
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
-                        self.isInfoDefaultFocus = true
+                        self.isAbDefaultFocus = true
                         sideBarDividerFlag = false
+                        
                     }
+                   
                 }
                 .onReceive(pub_default_focus) { (out_location_default) in
                     guard let _out_location_default = out_location_default.object as? Bool else {
                         print("Invalid URL")
                         return
                     }
-                    if _out_location_default {
-                        self.isInfoDefaultFocus = true
-                    }
+                    onDefaultFocus()
                 }
                 
                 Label {
-                    Text("Privacy Policy").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
+                    Text("Privacy Policy").font(.custom("Arial Round MT Bold", fixedSize: 30)).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "exclamationmark.shield").resizable().frame(width: 40, height: 40)
                 }
@@ -77,10 +78,18 @@ struct Information: View {
                         .stroke((isCurrentInfoClick == 2 ? Color.white : Color.infoMenuColor), lineWidth: 1)
                 )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoPrivacyPolicyFocus = newState }
+                .focused($isPPDefaultFocus)
+                .onReceive(pub_default_focus) { (out_location_default) in
+                    guard let _out_location_default = out_location_default.object as? Bool else {
+                        print("Invalid URL")
+                        return
+                    }
+                    onDefaultFocus()
+                }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 2; getCurrentInfo()})
                 
                 Label {
-                    Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).padding(.leading, -25).frame(width: 250, alignment: .leading)
+                    Text("Visitor Agreement").font(.custom("Arial Round MT Bold", fixedSize: 30)).frame(width: 250, alignment: .leading)
                 } icon: {
                     Image(systemName: "printer").resizable().frame(width: 40, height: 40)
                 }
@@ -92,6 +101,14 @@ struct Information: View {
                         .stroke((isCurrentInfoClick == 3 ? Color.white : Color.infoMenuColor), lineWidth: 1)
                 )
                 .focusable(isCollapseSideBar ? false : true) {newState in isInfoVisitorAgreementFocus = newState }
+                .focused($isInfoDefaultFocus)
+                .onReceive(pub_default_focus) { (out_location_default) in
+                    guard let _out_location_default = out_location_default.object as? Bool else {
+                        print("Invalid URL")
+                        return
+                    }
+                    onDefaultFocus()
+                }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 3; getCurrentInfo()})
                 
                 Spacer()
@@ -106,18 +123,32 @@ struct Information: View {
                     VStack(alignment: .center, spacing: 30) {
                         Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
                         Text(infoCurrentBody.string)
+                        
+                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
                         Spacer()
                     }
                     .onAppear() {
                         getCurrentInfo()
-                    }.focusable(isCollapseSideBar ? false : true)
+                    }
                         .frame(height: 900)
                 }
-            }.frame(height: 900).focusable(false)
+            }.frame(height: 900).focusable(true)
             Spacer()
             
         }
         
+    }
+    
+    func onDefaultFocus() {
+        switch isCurrentInfoClick {
+        case 1:
+            isAbDefaultFocus = true
+        case 2:
+            isPPDefaultFocus = true
+        default:
+            isInfoDefaultFocus = true
+            
+        }
     }
     
     func getCurrentInfo() {

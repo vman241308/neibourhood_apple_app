@@ -26,12 +26,14 @@ struct SideBar: View {
     @Binding var currentVideoTitle:String
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
-    @FocusState private var isSideDefaultFocus:Bool
+    @FocusState private var isLogoDefaultFocus:Bool
+    @FocusState private var isLocationDefaultFocus:Bool
+    @FocusState private var isInfoDefaultFocus:Bool
     let pub_isCollapseSideBar = NotificationCenter.default.publisher(for: NSNotification.Name.isCollapseSideBar)
     var body: some View {
         HStack(spacing: 1) {
             VStack {
-               
+               /*--------------------------------------*/
                 Label {
                 } icon: {
                     if isCollapseSideBar {
@@ -48,8 +50,10 @@ struct SideBar: View {
                         .stroke((isSideFocusState ? (isSideHomeFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 0 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
                 .focusable(true) {newState in isSideHomeFocus = newState ; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
-                .focused($isSideDefaultFocus)
-                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})                
+                .focused($isLogoDefaultFocus)
+                .onLongPressGesture(minimumDuration: 0.001, perform: {isLocationItemFocused = 0 ; onHomeButton()})
+                
+                /*--------------------------------------*/
                 
                 Label {
                     if isCollapseSideBar {
@@ -69,8 +73,11 @@ struct SideBar: View {
                         .stroke((isSideFocusState ? (isSideLocationFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 1 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
                 .focusable(true) {newState in isSideLocationFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus() }
+                .focused($isLocationDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onLocationButton()})
                 
+                
+                /*--------------------------------------*/
                 Label {
                     if isCollapseSideBar {
                         Text("Information").font(.custom("Arial Round MT Bold", fixedSize: 25)).padding(.leading, -25).frame(width: 150, alignment: .leading)
@@ -86,6 +93,7 @@ struct SideBar: View {
                         .stroke((isSideFocusState ? (isSideInfoFocus == true) ? Color.white : Color.infoMenuColor : isLocationItemFocused == 2 ? Color.white : Color.infoMenuColor), lineWidth: 3)
                 )
                 .focusable(true) {newState in isSideInfoFocus = newState; if newState { isSideFocusState = true} else { isSideFocusState = false}; onCollapseStatus()}
+                .focused($isInfoDefaultFocus)
                 .onLongPressGesture(minimumDuration: 0.001, perform: {onInfoButton()})
                 
                 Spacer()
@@ -124,7 +132,15 @@ struct SideBar: View {
     }
     
     func fromContentToDivider() {
-        self.isSideDefaultFocus = true
+        switch isLocationItemFocused {
+        case 0:
+            self.isLogoDefaultFocus = true
+        case 1:
+            self.isLocationDefaultFocus = true
+        default:
+            self.isInfoDefaultFocus = true
+        }
+        
         self.isCollapseSideBar = true
         sideBarDividerFlag = true
     }
@@ -133,10 +149,6 @@ struct SideBar: View {
         isLocationItemFocused = 2
         isCollapseSideBar = false
     }
-    
-//    func onLockButton() {
-//        isCollapseSideBar.toggle()
-//    }
     
     func onHomeButton() {
         guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
@@ -151,6 +163,10 @@ struct SideBar: View {
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .player_pause, object: false)
         }
         
         currentVideoPlayURL = _originalVideoPlayURL

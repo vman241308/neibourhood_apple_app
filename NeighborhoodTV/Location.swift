@@ -288,8 +288,8 @@ struct GridLocationItem: View {
                         return
                     }
                     
-                                        locationCurrentVideoPlayURL = _currentVideoPlayURL
-//                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+//                                        locationCurrentVideoPlayURL = _currentVideoPlayURL
+                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
@@ -379,7 +379,8 @@ struct Location: View {
                                 isFullScreenBtnClicked: $isLocationFullScreenBtnClicked,
                                 isPreviewVideoStatus: $isLocationPreviewVideoStatus,
                                 isCollapseSideBar:$isCollapseSideBar,
-                                isVideoSectionFocused:$isLocationVideoSectionFocused
+                                isVideoSectionFocused:$isLocationVideoSectionFocused,
+                                isCornerScreenFocused:$isLocationCornerScreenFocused
                             )
                             .onExitCommand(perform: {isLocationVisible = true})
                         }

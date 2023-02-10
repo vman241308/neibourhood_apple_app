@@ -39,8 +39,8 @@ struct Grid: View {
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-//                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -61,9 +61,13 @@ struct Grid: View {
         .scaleEffect(isFocused ? 1.1 : 1)
         .focusable(isCollapseSideBar ? false : isItemFocusable) { newState in
             isFocused = newState;
+            print("------------")
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .player_pause, object: true)
+            };
             if newState {
-                isPreviewVideoStatus = true
-            }
+//                isPreviewVideoStatus = true
+            };
             onCheckCurrentPositon()}
         .focused($isPreviousFocused)
         .onReceive(publish) {iIndex in
@@ -92,6 +96,8 @@ struct Grid: View {
     }
     
     func onCheckCurrentPositon() {
+        
+            
         do {
             if (item.itemIndex <= allMediaItems.count && item.itemIndex > (allMediaItems.count - 5)){
                 currentPaginationNum = allMediaItems.count
@@ -188,16 +194,10 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        currentVideoPlayURL = "Hello!"
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .pub_player_mute, object: true)
         }
-        
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
-        }
-        
         
         
         do {
@@ -275,16 +275,18 @@ struct Grid: View {
                         return
                     }
                     
-                    currentVideoPlayURL = _currentLocationVideoPlayURL
+//                    currentVideoPlayURL = _currentLocationVideoPlayURL
 
-//                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-//                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
-//                                        } else {
-//                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-//                                        }
+                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
+                                        } else {
+                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                                        }
+                    
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .pub_player_mute, object: false)
                     }
+                    
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)

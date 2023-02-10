@@ -59,6 +59,7 @@ extension Notification.Name {
     static let isCollapseSideBar = Notification.Name("isCollapseSideBar")
     static let pub_player_mute = Notification.Name("pub_player_mute")
     static let puh_fullScreen = Notification.Name("puh_fullScreen")
+    static let player_pause = Notification.Name("player_pause")
 }
 
 /* RefreshToken Model */

@@ -16,6 +16,7 @@ extension AVQueuePlayer {
 
 struct PreviewVideo: View {
     @Binding var currentVideoPlayURL:String
+    @Binding var isCornerScreenFocused:Bool
     @State var OMute:Bool = false
     @State private var player : AVQueuePlayer?
     @State private var videoLooper: AVPlayerLooper?
@@ -24,16 +25,29 @@ struct PreviewVideo: View {
     
     let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)
     let pub_player_mute = NotificationCenter.default.publisher(for: NSNotification.Name.pub_player_mute)
+    let pub_player_pause = NotificationCenter.default.publisher(for: NSNotification.Name.player_pause)
     
     var body: some View {
         VideoPlayer(player: player)
             .focusable(false)
+            .onReceive(pub_player_pause) {(oPause) in
+                guard let _oPause = oPause.object as? Bool else {
+                    print("Invalid URL")
+                    return
+                }
+                if isCornerScreenFocused {
+                    if _oPause {
+                        player!.pause()
+                    } else {
+                        player!.play()
+                    }
+                }
+            }
             .onReceive(pub_player_mute) { (oMute) in
                 guard let _oMute = oMute.object as? Bool else {
                     print("Invalid URL")
                     return
                 }
-                
                 OMute = _oMute
             }
             .onAppear() {
@@ -46,7 +60,7 @@ struct PreviewVideo: View {
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
             }
             .onReceive(publisher) { (output) in
-               
+                
                 guard let _objURL = output.object as? String else {
                     print("Invalid URL")
                     return
@@ -58,6 +72,7 @@ struct PreviewVideo: View {
                 player!.play()
                 player!.isMuted = OMute
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
+                
             }
             
     }
