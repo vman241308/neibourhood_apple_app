@@ -20,6 +20,7 @@ struct Home: View {
     
     @FocusState private var nameInfocus: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
+    let puh_fullScreen = NotificationCenter.default.publisher(for: Notification.Name.puh_fullScreen)
     
     var body: some View {
         VStack{
@@ -30,6 +31,13 @@ struct Home: View {
                     .onExitCommand(perform: {onVideoBackButton()})
                     .padding(.top , (!isFullScreenBtnClicked ? 0 : 230) )
                     .focusable(false)
+                    .onReceive(puh_fullScreen) { (outFull) in
+                        guard let _outFull = outFull.object as? Bool else {
+                            print("Invalid URL")
+                            return
+                        }
+                        isFullScreenBtnClicked = _outFull
+                    }
                 
                 if !self.isFullScreenBtnClicked {
                     HStack {

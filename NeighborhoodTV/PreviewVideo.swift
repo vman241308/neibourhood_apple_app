@@ -8,6 +8,12 @@
 import SwiftUI
 import AVKit
 
+extension AVQueuePlayer {
+    var isPlaying: Bool {
+        return rate != 0 && error == nil
+    }
+}
+
 struct PreviewVideo: View {
     @Binding var currentVideoPlayURL:String
     @State var OMute:Bool = false
@@ -31,13 +37,13 @@ struct PreviewVideo: View {
                 OMute = _oMute
             }
             .onAppear() {
-                
                 let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
                 videoLooper?.disableLooping()
-//                player!.play()
+                player!.play()
                 player!.isMuted = OMute
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
             }
             .onReceive(publisher) { (output) in
                
@@ -49,10 +55,17 @@ struct PreviewVideo: View {
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
                 videoLooper?.disableLooping()
-//                player!.play()
+                player!.play()
                 player!.isMuted = OMute
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
             }
             
+    }
+    
+    func didPlayToEnd(_ notification: Notification) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .puh_fullScreen, object: false)
+        }
     }
 }
 
