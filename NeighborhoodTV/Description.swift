@@ -21,6 +21,8 @@ struct Description: View {
     
     @FocusState private var nameInfocused: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
+    let puh_fullScreen = NotificationCenter.default.publisher(for: Notification.Name.puh_fullScreen)
+    
     var body: some View {
         VStack{
             HStack {
@@ -74,6 +76,14 @@ struct Description: View {
                         .shadow(color: .black, radius: 10)
                         .frame(width: (isFullScreenBtnClicked ? 1920 : 900), height: (isFullScreenBtnClicked ? 1080 : 505))
                         .focusable(false)
+                        .onReceive(puh_fullScreen) { (outFull) in
+                            guard let _outFull = outFull.object as? Bool else {
+                                print("Invalid URL")
+                                return
+                            }
+                            isFullScreenBtnClicked = _outFull
+                        }
+                    
                     Spacer()
                 } .frame(width: 550, height: 505)
                     .padding(.top , (!isFullScreenBtnClicked ? 0 : 550) )
