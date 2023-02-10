@@ -92,7 +92,8 @@ struct SideBar: View {
             }
             .padding(.top, 50)
             .frame(width: (isCollapseSideBar ? 350 : 140 ))
-            .background(isCollapseSideBar ? Color.sideBarCollapseBack : Color.sideBarBack)
+//            .background(isCollapseSideBar ? Color.sideBarCollapseBack : Color.sideBarBack)
+            .background(Color.sideBarBack)
             
             if sideBarDividerFlag {
                 Divider().focusable(true) { newStat in isDividerFocus1 = newStat ; fromDividerToContent()}

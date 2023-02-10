@@ -65,7 +65,9 @@ struct ContentView: View {
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
                                         isCollapseSideBar:$isCollapseSideBar,
                                         isVideoSectionFocused:$isVideoSectionFocused
-                                    )
+                                    ).onExitCommand() {
+                                        exit(0)
+                                    }
                                 }
                             } else
                             if !self.isCornerScreenFocused {
