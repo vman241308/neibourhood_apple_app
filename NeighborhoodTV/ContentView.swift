@@ -64,7 +64,8 @@ struct ContentView: View {
                                         isFullScreenBtnClicked: $isFullScreenBtnClicked,
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
                                         isCollapseSideBar:$isCollapseSideBar,
-                                        isVideoSectionFocused:$isVideoSectionFocused
+                                        isVideoSectionFocused:$isVideoSectionFocused,
+                                        isCornerScreenFocused:$isCornerScreenFocused
                                     ).onExitCommand() {
                                         exit(0)
                                     }
@@ -166,6 +167,10 @@ struct ContentView: View {
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .player_pause, object: false)
         }
         
         currentVideoPlayURL = _originalVideoPlayURL

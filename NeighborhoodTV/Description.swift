@@ -72,7 +72,7 @@ struct Description: View {
                 }
                 
                 VStack {
-                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL)
+                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused)
                         .shadow(color: .black, radius: 10)
                         .frame(width: (isFullScreenBtnClicked ? 1920 : 900), height: (isFullScreenBtnClicked ? 1080 : 505))
                         .focusable(false)
@@ -83,6 +83,7 @@ struct Description: View {
                             }
                             isFullScreenBtnClicked = _outFull
                         }
+                    
                     
                     Spacer()
                 } .frame(width: 550, height: 505)
