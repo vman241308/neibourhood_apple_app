@@ -188,7 +188,17 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        currentVideoPlayURL = ""
+        currentVideoPlayURL = "Hello!"
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .pub_player_mute, object: true)
+        }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
+        }
+        
+        
         
         do {
             guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
@@ -272,10 +282,15 @@ struct Grid: View {
                                         } else {
                                             currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                                         }
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .pub_player_mute, object: false)
+                    }
                     
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }
+                    
+                    
                     
                     
                     if !isCornerScreenFocused {
