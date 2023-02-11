@@ -20,8 +20,10 @@ struct PreviewVideo: View {
     @State var OMute:Bool = false
     @State private var player : AVQueuePlayer?
     @State private var videoLooper: AVPlayerLooper?
-    
     @State private var lastPositionMap: [AnyHashable: TimeInterval] = [:]
+    @State var imageView: UIImageView!
+    @State var isFullScreenModeFlag:Bool = false
+    @State var currentthumbnailUrl:String = (UserDefaults.standard.object(forKey: "currentthumbnailUrl") as? String)!
     
     let publisher = NotificationCenter.default.publisher(for: NSNotification.Name.dataDidFlow)
     let pub_player_mute = NotificationCenter.default.publisher(for: NSNotification.Name.pub_player_mute)
@@ -29,6 +31,12 @@ struct PreviewVideo: View {
     
     var body: some View {
         VideoPlayer(player: player)
+//            .overlay(AsyncImage(url: URL(string: currentthumbnailUrl), content: {image in
+                    .overlay(AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg"), content: {image in
+
+                image.resizable()
+                    .scaledToFill()
+            }, placeholder: {progressView()}).opacity(isFullScreenModeFlag ? 1: 0))
             .focusable(false)
             .onReceive(pub_player_pause) {(oPause) in
                 guard let _oPause = oPause.object as? Bool else {
@@ -36,9 +44,11 @@ struct PreviewVideo: View {
                     return
                 }
                 if isCornerScreenFocused {
+                    print("----------------------------------1")
                     if _oPause {
                         player!.pause()
                     } else {
+                        isFullScreenModeFlag = false
                         player!.play()
                     }
                 }
@@ -51,16 +61,23 @@ struct PreviewVideo: View {
                 OMute = _oMute
             }
             .onAppear() {
+                isFullScreenModeFlag = false
                 let templateItem = AVPlayerItem(url: URL(string: currentVideoPlayURL )!)
                 player = AVQueuePlayer(playerItem: templateItem)
                 videoLooper = AVPlayerLooper(player: player!, templateItem: templateItem)
                 videoLooper?.disableLooping()
                 player!.play()
                 player!.isMuted = OMute
+                
+                guard let _currentthumbnailUrl = UserDefaults.standard.object(forKey: "currentthumbnailUrl") as? String else {
+                    print("Invalid access token")
+                    return
+                }
+                currentthumbnailUrl = _currentthumbnailUrl
                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
             }
             .onReceive(publisher) { (output) in
-                
+                isFullScreenModeFlag = false
                 guard let _objURL = output.object as? String else {
                     print("Invalid URL")
                     return
@@ -71,16 +88,30 @@ struct PreviewVideo: View {
                 videoLooper?.disableLooping()
                 player!.play()
                 player!.isMuted = OMute
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
                 
+                guard let _currentthumbnailUrl = UserDefaults.standard.object(forKey: "currentthumbnailUrl") as? String else {
+                    print("Invalid access token")
+                    return
+                }
+                currentthumbnailUrl = _currentthumbnailUrl
+                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: self.didPlayToEnd)
             }
-            
+    }
+    
+    func progressView() -> some View {
+        Image(systemName: "")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .foregroundColor(.gray)
     }
     
     func didPlayToEnd(_ notification: Notification) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .puh_fullScreen, object: false)
         }
+        
+        isFullScreenModeFlag = true
     }
 }
 
