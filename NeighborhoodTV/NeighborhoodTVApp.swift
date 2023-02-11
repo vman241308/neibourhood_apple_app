@@ -210,6 +210,7 @@ struct NeighborhoodTVApp: App {
                     UserDefaults.standard.set(jsonMediaListResults["retrieve_uri"], forKey: "retrieve_uri")
                     UserDefaults.standard.set(jsonMediaListLocation["title"], forKey: "original_title")
                     UserDefaults.standard.set(jsonMediaListLocation["play_uri"], forKey: "play_uri")
+                    UserDefaults.standard.set(jsonMediaListLocation["thumbnailUrl"], forKey: "currentthumbnailUrl")
                     
                     
                     for item in jsonMediaListItems {

@@ -61,12 +61,11 @@ struct Grid: View {
         .scaleEffect(isFocused ? 1.1 : 1)
         .focusable(isCollapseSideBar ? false : isItemFocusable) { newState in
             isFocused = newState;
-            print("------------")
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .player_pause, object: true)
             };
             if newState {
-//                isPreviewVideoStatus = true
+                isPreviewVideoStatus = true
             };
             onCheckCurrentPositon()}
         .focused($isPreviousFocused)
@@ -274,6 +273,8 @@ struct Grid: View {
                         print("Invalid playURI")
                         return
                     }
+                    
+                    UserDefaults.standard.set(item.thumbnailUrl, forKey: "currentthumbnailUrl")
                     
 //                    currentVideoPlayURL = _currentLocationVideoPlayURL
 
