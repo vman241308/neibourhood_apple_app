@@ -17,16 +17,16 @@ struct Home: View {
     @Binding var isCollapseSideBar:Bool
     @Binding var isVideoSectionFocused:Bool
     @Binding var isCornerScreenFocused:Bool
+    @Binding var isFirstVideo:Bool
     
     @FocusState private var nameInfocus: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     let puh_fullScreen = NotificationCenter.default.publisher(for: Notification.Name.puh_fullScreen)
-    let pub_player_pause = NotificationCenter.default.publisher(for: Notification.Name.player_pause)
     
     var body: some View {
         VStack{
             ZStack {
-                PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused)
+                PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused, isFirstVideo:$isFirstVideo)
                     .shadow(color: .black, radius: 10)
                     .frame(width: (isFullScreenBtnClicked ? 1920 : 1500), height: (isFullScreenBtnClicked ? 1080 : 850))
                     .onExitCommand(perform: {onVideoBackButton()})

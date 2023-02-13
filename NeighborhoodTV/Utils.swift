@@ -57,9 +57,9 @@ extension Notification.Name {
     static let locationDefaultFocus = Notification.Name("locationDefaultFocus")
     static let onFullBtnAction = Notification.Name("onFullBtnAction")
     static let isCollapseSideBar = Notification.Name("isCollapseSideBar")
-    static let pub_player_mute = Notification.Name("pub_player_mute")
     static let puh_fullScreen = Notification.Name("puh_fullScreen")
-    static let player_pause = Notification.Name("player_pause")
+    static let pub_player_stop = Notification.Name("pub_player_stop")
+    static let pub_player_mute = Notification.Name("pub_player_mute")
 }
 
 /* RefreshToken Model */
