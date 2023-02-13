@@ -12,13 +12,55 @@ import SwiftUI
 import FoundationNetworking
 #endif
 
+extension ScrollViewProxy: Equatable {
+    public static func == (lhs: ScrollViewProxy, rhs: ScrollViewProxy) -> Bool {
+        // implement comparison logic here
+        return true
+    }
+    
+    var hashValue: Int {
+        // implement hash value logic here
+        return 0
+    }
+}
+
+struct TextView: UIViewRepresentable {
+    
+    @Binding var text: String
+    @Binding var textStyle: UIFont.TextStyle
+    
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        let range = NSRange(location: textView.text.count - 1, length: 0)
+        
+        textView.font = UIFont.preferredFont(forTextStyle: textStyle)
+        //                textView.autocapitalizationType = .sentences
+        //                textView.isSelectable = true
+        //                textView.isUserInteractionEnabled = true
+        textView.clipsToBounds = false
+        textView.isScrollEnabled = true
+        textView.showsVerticalScrollIndicator = true
+        textView.scrollRangeToVisible(range)
+        
+        return textView
+    }
+    
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        uiView.text = text
+        uiView.font = UIFont.preferredFont(forTextStyle: textStyle)
+    }
+}
+
 struct Information: View {
     @State var infoCurrentTitle:String = ""
-    @State var infoCurrentBody = NSAttributedString()
+    @State var infoCurrentBody:String = ""
+    @State var textStyle = UIFont.TextStyle.body
     @State var isInfoAboutUSFocus = false
     @State var isInfoPrivacyPolicyFocus = false
     @State var isInfoVisitorAgreementFocus = false
     @State var isCurrentInfoClick: Int = 1
+    @State var isDividerInfo = false
+    @State var isTextInfo = false
     
     @Binding var sideBarDividerFlag:Bool
     @Binding var isCollapseSideBar:Bool
@@ -27,12 +69,13 @@ struct Information: View {
     @FocusState private var isPPDefaultFocus:Bool
     @FocusState private var isInfoDefaultFocus:Bool
     
-    let textView = UITextView()
+    
+    @State private var isVisible = false
     
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
     
     var body: some View {
-        HStack {
+        HStack(spacing: 2) {
             VStack(alignment: .leading, spacing: 30) {
                 Label {
                     Text("About Us").font(.custom("Arial Round MT Bold", fixedSize: 30)).frame(width: 250, alignment: .leading)
@@ -55,7 +98,7 @@ struct Information: View {
                         sideBarDividerFlag = false
                         
                     }
-                   
+                    
                 }
                 .onReceive(pub_default_focus) { (out_location_default) in
                     guard let _out_location_default = out_location_default.object as? Bool else {
@@ -118,23 +161,20 @@ struct Information: View {
             .padding(.top, 50)
             .background(Color.infoMenuColor)
             
-            ScrollView {
-                ScrollViewReader { proxy in
-                    VStack(alignment: .center, spacing: 30) {
-                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
-                        Text(infoCurrentBody.string)
-                        
-                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
-                        Spacer()
-                    }
-                    .onAppear() {
-                        getCurrentInfo()
-                    }
-                        .frame(height: 900)
-                }
-            }.frame(height: 900).focusable(true)
-            Spacer()
+            Divider().focusable(isTextInfo ? true : false) { newState in isDividerInfo = newState; onDefaultFocus()}
             
+            ScrollView {
+                VStack() {
+                    
+                    TextView(text: $infoCurrentBody, textStyle: $textStyle)
+                        .padding(.leading, 50)
+                    //                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
+                }
+                .onAppear() {
+                    getCurrentInfo()
+                }
+            }
+            .focusable(true) {newState in isTextInfo = newState}
         }
         
     }
@@ -168,7 +208,7 @@ struct Information: View {
             let htmlData = NSString(string: _body_privacy_policy).data(using: String.Encoding.unicode.rawValue)
             let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
             let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
-            infoCurrentBody = attributedString
+            infoCurrentBody = attributedString.string
         case 3:
             guard let _title_visitor_agreement = UserDefaults.standard.object(forKey: "visitor_agreement_seo_title") as? String else {
                 print("Invalid _title_about_us")
@@ -184,7 +224,7 @@ struct Information: View {
             let htmlData = NSString(string: _body_visitor_agreement).data(using: String.Encoding.unicode.rawValue)
             let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
             let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
-            infoCurrentBody = attributedString
+            infoCurrentBody = attributedString.string
         default:
             guard let _title_about_us = UserDefaults.standard.object(forKey: "about_us_seo_title") as? String else {
                 print("Invalid _title_about_us")
@@ -200,7 +240,11 @@ struct Information: View {
             let htmlData = NSString(string: _body_about_us).data(using: String.Encoding.unicode.rawValue)
             let options = [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html]
             let attributedString  = try! NSAttributedString(data: htmlData!, options: options, documentAttributes: nil)
-            infoCurrentBody = attributedString
+            infoCurrentBody = attributedString.string
         }
     }
+    
+    
+    
+    
 }

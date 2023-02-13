@@ -27,6 +27,9 @@ struct ContentView: View {
     @State var sideBarDividerFlag:Bool = false
     @State var isLocationVisible:Bool = true
     @State var isSideBarVisible:Bool = false
+    @State var isFirstVideo = false
+    
+    let pu_player_stop = NotificationCenter.default.publisher(for: NSNotification.Name.pub_player_stop)
     
     let pub_sidebar = NotificationCenter.default.publisher(for: NSNotification.Name.onFullBtnAction)
     var body: some View {
@@ -38,7 +41,8 @@ struct ContentView: View {
                         allLocationItems:$allLocationItems,
                         sideBarDividerFlag:$sideBarDividerFlag,
                         isLocationVisible:$isLocationVisible,
-                        isCollapseSideBar:$isCollapseSideBar
+                        isCollapseSideBar:$isCollapseSideBar,
+                        isFirstVideo:$isFirstVideo
                     )
                     .background(Image("bg_full_2"))
                     .onExitCommand() {
@@ -65,8 +69,19 @@ struct ContentView: View {
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
                                         isCollapseSideBar:$isCollapseSideBar,
                                         isVideoSectionFocused:$isVideoSectionFocused,
-                                        isCornerScreenFocused:$isCornerScreenFocused
-                                    ).onExitCommand() {
+                                        isCornerScreenFocused:$isCornerScreenFocused,
+                                        isFirstVideo:$isFirstVideo
+                                    ).onReceive(pu_player_stop) {(oPu_player_stop) in
+                                        guard let _oPub_player_stop = oPu_player_stop.object as? Bool else {
+                                            print("Invalid URL")
+                                            return
+                                        }
+                                        
+                                        if _oPub_player_stop {
+                                            isPreviewVideoStatus = true
+                                        }
+                                    }
+                                    .onExitCommand() {
                                         exit(0)
                                     }
                                 }
@@ -81,7 +96,8 @@ struct ContentView: View {
                                         currentVideoDescription: $currentVideoDescription,
                                         isVideoSectionFocused:$isVideoSectionFocused,
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
-                                        isCollapseSideBar:$isCollapseSideBar
+                                        isCollapseSideBar:$isCollapseSideBar,
+                                        isFirstVideo:$isFirstVideo
                                     )
                                 }
                             }
@@ -169,13 +185,13 @@ struct ContentView: View {
             NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
         }
         
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .player_pause, object: false)
-        }
-        
         currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .pub_player_stop, object: false)
+        }
     }
 }
 

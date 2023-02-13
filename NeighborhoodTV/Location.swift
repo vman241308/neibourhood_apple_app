@@ -288,8 +288,8 @@ struct GridLocationItem: View {
                         return
                     }
                     
-//                                        locationCurrentVideoPlayURL = _currentVideoPlayURL
-                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+                                        locationCurrentVideoPlayURL = _currentVideoPlayURL
+//                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: locationCurrentVideoPlayURL)
@@ -324,6 +324,7 @@ struct Location: View {
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
     @Binding var isCollapseSideBar:Bool
+    @Binding var isFirstVideo:Bool
     
     @State var locationAllMediaItems:[MediaListType] = []
     @State var isLocationTitleFocused = false
@@ -380,7 +381,8 @@ struct Location: View {
                                 isPreviewVideoStatus: $isLocationPreviewVideoStatus,
                                 isCollapseSideBar:$isCollapseSideBar,
                                 isVideoSectionFocused:$isLocationVideoSectionFocused,
-                                isCornerScreenFocused:$isLocationCornerScreenFocused
+                                isCornerScreenFocused:$isLocationCornerScreenFocused,
+                                isFirstVideo: $isFirstVideo
                             )
                             .onExitCommand(perform: {isLocationVisible = true})
                         }
@@ -395,7 +397,8 @@ struct Location: View {
                                     currentVideoDescription: $locationCurrentVideoDescription,
                                     isVideoSectionFocused: $isLocationVideoSectionFocused,
                                     isPreviewVideoStatus: $isLocationPreviewVideoStatus,
-                                    isCollapseSideBar:$isCollapseSideBar
+                                    isCollapseSideBar:$isCollapseSideBar,
+                                    isFirstVideo:$isFirstVideo
                                 )
                             }
                         }

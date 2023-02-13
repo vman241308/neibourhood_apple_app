@@ -14,7 +14,6 @@ struct SideBar: View {
     @State var isSideHomeFocus = false
     @State var isSideLocationFocus = false
     @State var isSideInfoFocus = false
-//    @State var isSideLockFocus = false
     @State var isDividerFocus1 = false
     @State var isDividerFocus2 = false
     @State var isDividerFocus3 = false
@@ -165,14 +164,14 @@ struct SideBar: View {
             NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
         }
         
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .player_pause, object: false)
-        }
-        
         currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
         isCollapseSideBar = false
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .pub_player_stop, object: false)
+        }
     }
     
     func onLocationButton() {

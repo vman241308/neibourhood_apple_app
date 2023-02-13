@@ -21,6 +21,7 @@ struct Grid: View {
     @State var isFocused = false
     @State private var itemIndex = 2
     @State var isItemFocusable = true
+    @State var isPlayerStop = false
     
     @Binding var allMediaItems:[MediaListType]
     @Binding var isPreviewVideoStatus:Bool
@@ -39,8 +40,8 @@ struct Grid: View {
     var body: some View {
         HStack{
             ZStack(alignment: .bottom) {
-//                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
-                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
+                AsyncImage(url: URL(string: "\(item.thumbnailUrl)")) { image in
+//                                    AsyncImage(url: URL(string: "file:///Users/fulldev/Documents/temp/AppleTV-app/NeighborhoodTV/Assets.xcassets/splashscreen.jpg")) { image in
                     image
                         .resizable()
                         .scaledToFit()
@@ -61,11 +62,10 @@ struct Grid: View {
         .scaleEffect(isFocused ? 1.1 : 1)
         .focusable(isCollapseSideBar ? false : isItemFocusable) { newState in
             isFocused = newState;
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .player_pause, object: true)
-            };
             if newState {
-                isPreviewVideoStatus = true
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .pub_player_stop, object: true)
+                }
             };
             onCheckCurrentPositon()}
         .focused($isPreviousFocused)
@@ -95,8 +95,6 @@ struct Grid: View {
     }
     
     func onCheckCurrentPositon() {
-        
-            
         do {
             if (item.itemIndex <= allMediaItems.count && item.itemIndex > (allMediaItems.count - 5)){
                 currentPaginationNum = allMediaItems.count
@@ -193,11 +191,9 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .pub_player_mute, object: true)
         }
-        
         
         do {
             guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
@@ -276,23 +272,24 @@ struct Grid: View {
                     
                     UserDefaults.standard.set(item.thumbnailUrl, forKey: "currentthumbnailUrl")
                     
-//                    currentVideoPlayURL = _currentLocationVideoPlayURL
+                    currentVideoPlayURL = _currentLocationVideoPlayURL
 
                                         if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
                                             currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
                                         } else {
                                             currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                                         }
-                    
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .pub_player_mute, object: false)
-                    }
-                    
-                    
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }
                     
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .pub_player_stop, object: false)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .pub_player_mute, object: false)
+                    }
                     
                     
                     
