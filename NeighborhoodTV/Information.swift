@@ -163,17 +163,16 @@ struct Information: View {
             
             Divider().focusable(isTextInfo ? true : false) { newState in isDividerInfo = newState; onDefaultFocus()}
             
-            ScrollView {
+
                 VStack() {
-                    
+                    Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
                     TextView(text: $infoCurrentBody, textStyle: $textStyle)
                         .padding(.leading, 50)
-                    //                        Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
+                                            
                 }
                 .onAppear() {
                     getCurrentInfo()
                 }
-            }
             .focusable(true) {newState in isTextInfo = newState}
         }
         

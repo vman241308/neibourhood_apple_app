@@ -288,6 +288,20 @@ struct GridLocationItem: View {
                         return
                     }
                     
+                    UserDefaults.standard.set(jsonLocationPreviewVideoResults["is_live"], forKey: "origin_is_live")
+                    UserDefaults.standard.set(jsonLocationPreviewVideoResults["manage_trp"], forKey: "origin_manage_trp")
+                    
+                    guard let jsonLocationPreviewVideoTRP = jsonLocationPreviewVideoResults["trp"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+
+                    UserDefaults.standard.set(jsonLocationPreviewVideoTRP["uri"], forKey: "origin_trp_uri")
+                    UserDefaults.standard.set(jsonLocationPreviewVideoTRP["intervel_sec"], forKey: "origin_intervel_sec")
+                    UserDefaults.standard.set(jsonLocationPreviewVideoTRP["access_key"], forKey: "origin_trp_access_key")
+                    
+                    UserDefaults.standard.set(locationItem.thumbnailUrl, forKey: "currentthumbnailUrl")
+                    
                                         locationCurrentVideoPlayURL = _currentVideoPlayURL
 //                    locationCurrentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
                     UserDefaults.standard.set(locationCurrentVideoPlayURL, forKey: "original_uri")
