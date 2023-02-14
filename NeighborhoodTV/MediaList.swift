@@ -64,6 +64,10 @@ struct Grid: View {
             isFocused = newState;
             if newState {
                 DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .pub_player_mute, object: true)
+                }
+                
+                DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .pub_player_stop, object: true)
                 }
             };
@@ -270,15 +274,27 @@ struct Grid: View {
                         return
                     }
                     
+                    UserDefaults.standard.set(jsonDescriptionVideoResults["is_live"], forKey: "current_is_live")
+                    UserDefaults.standard.set(jsonDescriptionVideoResults["manage_trp"], forKey: "current_manage_trp")
+                    
+                    guard let jsonDescriptionVideoTRP = jsonDescriptionVideoResults["trp"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+
+                    UserDefaults.standard.set(jsonDescriptionVideoTRP["uri"], forKey: "current_trp_uri")
+                    UserDefaults.standard.set(jsonDescriptionVideoTRP["intervel_sec"], forKey: "current_intervel_sec")
+                    UserDefaults.standard.set(jsonDescriptionVideoTRP["access_key"], forKey: "current_trp_access_key")
+                    
                     UserDefaults.standard.set(item.thumbnailUrl, forKey: "currentthumbnailUrl")
                     
                     currentVideoPlayURL = _currentLocationVideoPlayURL
 
-                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
-                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
-                                        } else {
-                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
-                                        }
+//                                        if currentVideoPlayURL == "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8" {
+//                                            currentVideoPlayURL = "file:///Users/fulldev/Documents/playlist/playlist.m3u8"
+//                                        } else {
+//                                            currentVideoPlayURL = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8"
+//                                        }
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .dataDidFlow, object: currentVideoPlayURL)
                     }

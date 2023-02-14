@@ -307,6 +307,20 @@ struct NeighborhoodTVApp: App {
                         return
                     }
                     
+                    UserDefaults.standard.set(jsonPreviewVideoResults["is_live"], forKey: "origin_is_live")
+                    UserDefaults.standard.set(jsonPreviewVideoResults["manage_trp"], forKey: "origin_manage_trp")
+                    
+                    
+                    guard let jsonPreviewVideoTRP = jsonPreviewVideoResults["trp"] as? [String: Any] else {
+                        print("Error: Cannot convert data to jsonPreviewVideoResults object")
+                        return
+                    }
+
+                    UserDefaults.standard.set(jsonPreviewVideoTRP["uri"], forKey: "origin_trp_uri")
+                    UserDefaults.standard.set(jsonPreviewVideoTRP["intervel_sec"], forKey: "origin_intervel_sec")
+                    UserDefaults.standard.set(jsonPreviewVideoTRP["access_key"], forKey: "origin_trp_access_key")
+                    
+                    
                                         currentVideoPlayURL = _currentVideoPlayURL
 //                    currentVideoPlayURL = "file:///Users/fulldev/Documents/temp/AppleTV-app/video.mp4"
                     UserDefaults.standard.set(currentVideoPlayURL, forKey: "original_uri")
