@@ -191,7 +191,13 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .pub_des_player_stop, object: true)
+        }
         
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .pub_player_stop, object: true)
+        }
         do {
             guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
                 print("Invalid accessToken")
