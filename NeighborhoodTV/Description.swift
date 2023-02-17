@@ -18,7 +18,6 @@ struct Description: View {
     @Binding var isVideoSectionFocused:Bool
     @Binding var isPreviewVideoStatus:Bool
     @Binding var isCollapseSideBar:Bool
-    @Binding var isFirstVideo:Bool
     
     @FocusState private var nameInfocused: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -73,7 +72,7 @@ struct Description: View {
                 }
                 
                 VStack {
-                    PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused, isFirstVideo:$isFirstVideo)
+                    DescriptionVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused)
                         .shadow(color: .black, radius: 10)
                         .frame(width: (isFullScreenBtnClicked ? 1920 : 900), height: (isFullScreenBtnClicked ? 1080 : 505))
                         .focusable(false)
@@ -118,7 +117,7 @@ struct Description: View {
         isCornerScreenFocused = true
         
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .pub_player_stop, object: true)
+            NotificationCenter.default.post(name: .pub_des_player_stop, object: true)
         }
     }
     

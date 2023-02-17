@@ -21,7 +21,6 @@ struct SideBar: View {
     @Binding var isCollapseSideBar:Bool
     @Binding var isPreviewVideoStatus:Bool
     @Binding var isLocationItemFocused:Int
-    @Binding var currentVideoPlayURL:String
     @Binding var currentVideoTitle:String
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
@@ -150,21 +149,11 @@ struct SideBar: View {
     }
     
     func onHomeButton() {
-        guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
-            print("Invalid URL")
-            return
-        }
-        
         guard let _currentVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
             print("Invalid Title")
             return
         }
         
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
-        }
-        
-        currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
         isCollapseSideBar = false

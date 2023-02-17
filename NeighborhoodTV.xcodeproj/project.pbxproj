@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		533F119F297BD55A00FE8D90 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 533F119E297BD55900FE8D90 /* Location.swift */; };
+		5340347B299D2A1A00F3EC54 /* DescriptionVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5340347A299D2A1800F3EC54 /* DescriptionVideo.swift */; };
 		53899F6529846CFB001A4B29 /* Information.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53899F6429846CFA001A4B29 /* Information.swift */; };
 		539B1FB2297B3FE2005C6D6B /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B1FB1297B3FE2005C6D6B /* Home.swift */; };
 		539B1FB4297B44F0005C6D6B /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B1FB3297B44F0005C6D6B /* Description.swift */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		533F119E297BD55900FE8D90 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		5340347A299D2A1800F3EC54 /* DescriptionVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionVideo.swift; sourceTree = "<group>"; };
 		53899F6429846CFA001A4B29 /* Information.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Information.swift; sourceTree = "<group>"; };
 		539B1FB1297B3FE2005C6D6B /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		539B1FB3297B44F0005C6D6B /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				53EDC7B3297A6BED0023C93A /* SplashScreen.swift */,
 				53DBDDC12990B9D1001681EC /* Loading.swift */,
 				53EDC7B9297A7C0F0023C93A /* PreviewVideo.swift */,
+				5340347A299D2A1800F3EC54 /* DescriptionVideo.swift */,
 				539B1FB3297B44F0005C6D6B /* Description.swift */,
 				53EDC78B297A6BB20023C93A /* ContentView.swift */,
 				53899F6429846CFA001A4B29 /* Information.swift */,
@@ -296,6 +299,7 @@
 				53CBD7F8298C7C45002486FC /* SideBar.swift in Sources */,
 				53EDC7BA297A7C0F0023C93A /* PreviewVideo.swift in Sources */,
 				53EDC7B6297A6F140023C93A /* Utils.swift in Sources */,
+				5340347B299D2A1A00F3EC54 /* DescriptionVideo.swift in Sources */,
 				53899F6529846CFB001A4B29 /* Information.swift in Sources */,
 				53DBDDC22990B9D2001681EC /* Loading.swift in Sources */,
 				539B1FB2297B3FE2005C6D6B /* Home.swift in Sources */,

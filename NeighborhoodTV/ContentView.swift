@@ -27,7 +27,6 @@ struct ContentView: View {
     @State var sideBarDividerFlag:Bool = false
     @State var isLocationVisible:Bool = true
     @State var isSideBarVisible:Bool = false
-    @State var isFirstVideo = false
     
     let pu_player_stop = NotificationCenter.default.publisher(for: NSNotification.Name.pub_player_stop)
     
@@ -41,8 +40,7 @@ struct ContentView: View {
                         allLocationItems:$allLocationItems,
                         sideBarDividerFlag:$sideBarDividerFlag,
                         isLocationVisible:$isLocationVisible,
-                        isCollapseSideBar:$isCollapseSideBar,
-                        isFirstVideo:$isFirstVideo
+                        isCollapseSideBar:$isCollapseSideBar
                     )
                     .background(Image("bg_full_2"))
                     .onExitCommand() {
@@ -63,14 +61,12 @@ struct ContentView: View {
                             if !self.isPreviewVideoStatus {
                                 VStack {
                                     Home(
-                                        currentVideoPlayURL:$currentVideoPlayURL,
                                         currentVideoTitle:$currentVideoTitle,
                                         isFullScreenBtnClicked: $isFullScreenBtnClicked,
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
                                         isCollapseSideBar:$isCollapseSideBar,
                                         isVideoSectionFocused:$isVideoSectionFocused,
-                                        isCornerScreenFocused:$isCornerScreenFocused,
-                                        isFirstVideo:$isFirstVideo
+                                        isCornerScreenFocused:$isCornerScreenFocused
                                     ).onReceive(pu_player_stop) {(oPu_player_stop) in
                                         guard let _oPub_player_stop = oPu_player_stop.object as? Bool else {
                                             print("Invalid URL")
@@ -96,8 +92,7 @@ struct ContentView: View {
                                         currentVideoDescription: $currentVideoDescription,
                                         isVideoSectionFocused:$isVideoSectionFocused,
                                         isPreviewVideoStatus:$isPreviewVideoStatus,
-                                        isCollapseSideBar:$isCollapseSideBar,
-                                        isFirstVideo:$isFirstVideo
+                                        isCollapseSideBar:$isCollapseSideBar
                                     )
                                 }
                             }
@@ -149,7 +144,6 @@ struct ContentView: View {
                     isCollapseSideBar:$isCollapseSideBar,
                     isPreviewVideoStatus:$isPreviewVideoStatus,
                     isLocationItemFocused:$isLocationItemFocused,
-                    currentVideoPlayURL:$currentVideoPlayURL,
                     currentVideoTitle:$currentVideoTitle,
                     sideBarDividerFlag:$sideBarDividerFlag,
                     isLocationVisible:$isLocationVisible
@@ -171,21 +165,11 @@ struct ContentView: View {
     }
     
     func onUpButtonToHome () {
-        guard let _originalVideoPlayURL = UserDefaults.standard.object(forKey: "original_uri") as? String else {
-            print("Invalid URL")
-            return
-        }
-        
         guard let _currentVideoTitle = UserDefaults.standard.object(forKey: "original_title") as? String else {
             print("Invalid Title")
             return
         }
         
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dataDidFlow, object: _originalVideoPlayURL)
-        }
-        
-        currentVideoPlayURL = _originalVideoPlayURL
         currentVideoTitle = _currentVideoTitle
         isPreviewVideoStatus = false
         

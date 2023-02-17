@@ -12,17 +12,6 @@ import SwiftUI
 import FoundationNetworking
 #endif
 
-extension ScrollViewProxy: Equatable {
-    public static func == (lhs: ScrollViewProxy, rhs: ScrollViewProxy) -> Bool {
-        // implement comparison logic here
-        return true
-    }
-    
-    var hashValue: Int {
-        // implement hash value logic here
-        return 0
-    }
-}
 
 struct TextView: UIViewRepresentable {
     
@@ -34,9 +23,6 @@ struct TextView: UIViewRepresentable {
         let range = NSRange(location: textView.text.count - 1, length: 0)
         
         textView.font = UIFont.preferredFont(forTextStyle: textStyle)
-        //                textView.autocapitalizationType = .sentences
-        //                textView.isSelectable = true
-        //                textView.isUserInteractionEnabled = true
         textView.clipsToBounds = false
         textView.isScrollEnabled = true
         textView.showsVerticalScrollIndicator = true
@@ -61,6 +47,8 @@ struct Information: View {
     @State var isCurrentInfoClick: Int = 1
     @State var isDividerInfo = false
     @State var isTextInfo = false
+    @State var isDividerText = false
+    @State var offsetX = 0
     
     @Binding var sideBarDividerFlag:Bool
     @Binding var isCollapseSideBar:Bool
@@ -68,6 +56,7 @@ struct Information: View {
     @FocusState private var isAbDefaultFocus:Bool
     @FocusState private var isPPDefaultFocus:Bool
     @FocusState private var isInfoDefaultFocus:Bool
+    @FocusState private var textDefaultFocus:Bool
     
     
     @State private var isVisible = false
@@ -153,7 +142,6 @@ struct Information: View {
                     onDefaultFocus()
                 }
                 .onLongPressGesture(minimumDuration: 0.001, perform: {isCurrentInfoClick = 3; getCurrentInfo()})
-                
                 Spacer()
             }
             .frame(width: 450)
@@ -161,21 +149,52 @@ struct Information: View {
             .padding(.top, 50)
             .background(Color.infoMenuColor)
             
-            Divider().focusable(isTextInfo ? true : false) { newState in isDividerInfo = newState; onDefaultFocus()}
+            Divider().focusable(textDefaultFocus ? true : false) { newState in isDividerInfo = newState; onDefaultFocus()}
             
-
-                VStack() {
-                    Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40))
-                    TextView(text: $infoCurrentBody, textStyle: $textStyle)
-                        .padding(.leading, 50)
-                                            
+            VStack(alignment: .center, spacing: 30) {
+                Text("\(infoCurrentTitle)").font(.custom("Arial Round MT Bold", fixedSize: 40)).focusable(true) { isFo in isDividerText = isFo; onUpScrollText() }
+                
+                VStack {
+                    List {
+                        TextView(text: $infoCurrentBody, textStyle:$textStyle)
+                            .offset(x: 0, y: CGFloat(offsetX))
+                            .frame(height: 800)
+                    }
+                    .focusable(true){newState in isTextInfo = newState; textDefaultFocus = true}
+                    .focused($textDefaultFocus)
+                    .padding(.leading, 100)
                 }
-                .onAppear() {
-                    getCurrentInfo()
-                }
-            .focusable(true) {newState in isTextInfo = newState}
+                
+                
+                Spacer()
+                Divider().padding(.leading, 100).focusable(true){ isFo in isDividerText = isFo; onDownScrollText()}
+            }
+            .onAppear() {
+                getCurrentInfo()
+            }
+            .frame(height: 900)
+            
+            Spacer()
         }
         
+    }
+    
+    func onUpScrollText() {
+        if textDefaultFocus {
+            offsetX -= 50;
+            textDefaultFocus = true
+        } else {
+            textDefaultFocus = true
+        }
+    }
+    
+    func onDownScrollText() {
+        if textDefaultFocus {
+            offsetX += 50;
+            textDefaultFocus = true
+        } else {
+            textDefaultFocus = true
+        }
     }
     
     func onDefaultFocus() {
@@ -191,6 +210,7 @@ struct Information: View {
     }
     
     func getCurrentInfo() {
+        offsetX = 0
         switch isCurrentInfoClick {
         case 2:
             guard let _title_privacy_policy = UserDefaults.standard.object(forKey: "privacy_policy_seo_title") as? String else {
@@ -242,8 +262,4 @@ struct Information: View {
             infoCurrentBody = attributedString.string
         }
     }
-    
-    
-    
-    
 }
