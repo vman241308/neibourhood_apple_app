@@ -10,14 +10,12 @@ import AVKit
 import UIKit
 
 struct Home: View {
-    @Binding var currentVideoPlayURL:String
     @Binding var currentVideoTitle:String
     @Binding var isFullScreenBtnClicked:Bool
     @Binding var isPreviewVideoStatus:Bool
     @Binding var isCollapseSideBar:Bool
     @Binding var isVideoSectionFocused:Bool
     @Binding var isCornerScreenFocused:Bool
-    @Binding var isFirstVideo:Bool
     
     @FocusState private var nameInfocus: Bool
     let pub_default_focus = NotificationCenter.default.publisher(for: NSNotification.Name.locationDefaultFocus)
@@ -26,7 +24,7 @@ struct Home: View {
     var body: some View {
         VStack{
             ZStack {
-                PreviewVideo(currentVideoPlayURL: $currentVideoPlayURL, isCornerScreenFocused:$isCornerScreenFocused, isFirstVideo:$isFirstVideo)
+                PreviewVideo()
                     .shadow(color: .black, radius: 10)
                     .frame(width: (isFullScreenBtnClicked ? 1920 : 1500), height: (isFullScreenBtnClicked ? 1080 : 850))
                     .onExitCommand(perform: {onVideoBackButton()})

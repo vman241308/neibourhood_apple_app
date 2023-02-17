@@ -64,10 +64,6 @@ struct Grid: View {
             isFocused = newState;
             if newState {
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .pub_player_mute, object: true)
-                }
-                
-                DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .pub_player_stop, object: true)
                 }
             };
@@ -195,9 +191,6 @@ struct Grid: View {
     }
     
     func onVideoDescription() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .pub_player_mute, object: true)
-        }
         
         do {
             guard var accessToken = UserDefaults.standard.object(forKey: "accessToken") as? String else {
@@ -303,9 +296,6 @@ struct Grid: View {
                         NotificationCenter.default.post(name: .pub_player_stop, object: false)
                     }
                     
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .pub_player_mute, object: false)
-                    }
                     
                     
                     

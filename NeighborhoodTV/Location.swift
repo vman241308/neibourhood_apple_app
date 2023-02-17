@@ -338,11 +338,12 @@ struct Location: View {
     @Binding var sideBarDividerFlag:Bool
     @Binding var isLocationVisible:Bool
     @Binding var isCollapseSideBar:Bool
-    @Binding var isFirstVideo:Bool
     
     @State var locationAllMediaItems:[MediaListType] = []
     @State var isLocationTitleFocused = false
     @State var isLoadingVisible = false
+    
+    let pu_player_stop = NotificationCenter.default.publisher(for: NSNotification.Name.pub_player_stop)
     let locationColumns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -389,15 +390,23 @@ struct Location: View {
                     if !isLocationPreviewVideoStatus {
                         VStack {
                             Home(
-                                currentVideoPlayURL:$locationCurrentVideoPlayURL,
                                 currentVideoTitle:$locationCurrentVideoTitle,
                                 isFullScreenBtnClicked: $isLocationFullScreenBtnClicked,
                                 isPreviewVideoStatus: $isLocationPreviewVideoStatus,
                                 isCollapseSideBar:$isCollapseSideBar,
                                 isVideoSectionFocused:$isLocationVideoSectionFocused,
-                                isCornerScreenFocused:$isLocationCornerScreenFocused,
-                                isFirstVideo: $isFirstVideo
+                                isCornerScreenFocused:$isLocationCornerScreenFocused
                             )
+                            .onReceive(pu_player_stop) {(oPu_player_stop) in
+                                guard let _oPub_player_stop = oPu_player_stop.object as? Bool else {
+                                    print("Invalid URL")
+                                    return
+                                }
+                                
+                                if _oPub_player_stop {
+                                    isLocationPreviewVideoStatus = true
+                                }
+                            }
                             .onExitCommand(perform: {isLocationVisible = true})
                         }
                     } else {
@@ -411,8 +420,7 @@ struct Location: View {
                                     currentVideoDescription: $locationCurrentVideoDescription,
                                     isVideoSectionFocused: $isLocationVideoSectionFocused,
                                     isPreviewVideoStatus: $isLocationPreviewVideoStatus,
-                                    isCollapseSideBar:$isCollapseSideBar,
-                                    isFirstVideo:$isFirstVideo
+                                    isCollapseSideBar:$isCollapseSideBar
                                 )
                             }
                         }
